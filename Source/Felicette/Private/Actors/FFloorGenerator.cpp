@@ -29,7 +29,7 @@ void AFFloorGenerator::Generate()
 {
 	for (AActor* Child : Blocks)
 	{
-		if (IsValid(Child) && Child->IsA(AFBlock::StaticClass()))
+		if (Child != nullptr && Child->IsA(AFBlock::StaticClass()))
 			Child->Destroy();
 	}
 
