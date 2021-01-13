@@ -16,11 +16,19 @@ public:
 	AFFloorGenerator();
 
 protected:
-	// Called when the game starts or when spawned
+	UPROPERTY()
+	class UInstancedStaticMeshComponent* InstancedStaticMeshComponent;	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int MaxX;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int MaxY;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Spacing;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMesh* StaticMesh;
+
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	virtual void OnConstruction(const FTransform& Transform) override;
 };
