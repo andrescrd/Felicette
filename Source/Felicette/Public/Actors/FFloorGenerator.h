@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "FBlock.h"
 #include "GameFramework/Actor.h"
 #include "FFloorGenerator.generated.h"
 
@@ -16,19 +18,22 @@ public:
 	AFFloorGenerator();
 
 protected:
-	UPROPERTY()
-	class UInstancedStaticMeshComponent* InstancedStaticMeshComponent;	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<AActor*> Blocks;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=FloorGenerator)
 	int MaxX;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=FloorGenerator)
 	int MaxY;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=FloorGenerator)
 	float Spacing;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class UStaticMesh* StaticMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=FloorGenerator)
+	TSubclassOf<class AFBlock> BlockClass;
 
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+	UFUNCTION(CallInEditor, Category=FloorGenerator)
+	void Generate();
 };

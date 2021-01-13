@@ -21,36 +21,37 @@ void AFFloorGenerator::BeginPlay()
 
 void AFFloorGenerator::OnConstruction(const FTransform& Transform)
 {
-	Super::OnConstruction(Transform);
+	Super::OnConstruction(Transform);	
+	Generate();	
+}
 
-	if (!StaticMesh)
+void AFFloorGenerator::Generate()
+{
+	for (AActor* Child : Blocks)
+	{
+		if (IsValid(Child) && Child->IsA(AFBlock::StaticClass()))
+			Child->Destroy();
+	}
+
+	if (!BlockClass)
 		return;
 
-	FVector Min;
-	FVector Max;
+	const int BlockIndex = (MaxX * MaxY);
 
-	InstancedStaticMeshComponent = NewObject<UInstancedStaticMeshComponent>(this);
-	InstancedStaticMeshComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
-	InstancedStaticMeshComponent->RegisterComponent();
-	InstancedStaticMeshComponent->SetFlags(EObjectFlags::RF_Transactional);
-	InstancedStaticMeshComponent->bCastDynamicShadow = false;
-	InstancedStaticMeshComponent->CreationMethod = EComponentCreationMethod::SimpleConstructionScript;
-	InstancedStaticMeshComponent->SetStaticMesh(StaticMesh);
+	FActorSpawnParameters Parameters;
+	Parameters.Instigator = GetInstigator();
+	Parameters.Owner = this;
+	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	InstancedStaticMeshComponent->GetLocalBounds(Min, Max);
-	const float Size = FMath::Abs(Min.X) + FMath::Abs(Max.X) + Spacing;
-
-	const int Counter = (MaxX * MaxY );
-	for (int i = 0; i < Counter; ++i)
+	for (int i = 0; i < BlockIndex; ++i)
 	{
-		FTransform NewTransorm;
-		FVector Location = GetActorLocation();
+		const float XOffset = (i / MaxY) * Spacing;
+		const float YOffset = (FMath::Fmod(i, MaxY)) * Spacing;
 
-		Location.X += i / MaxY  * Size;
-		Location.Y += FMath::Fmod(i, MaxY)   * Size;
-		Location.Z += 0;
-		
-		NewTransorm.SetLocation(Location);
-		InstancedStaticMeshComponent->AddInstanceWorldSpace(NewTransorm);
+		const FVector BlockLocation = FVector(XOffset, YOffset, 0.f) + GetActorLocation();
+		AFBlock* Block = GetWorld()->SpawnActor<AFBlock>(BlockClass, BlockLocation, FRotator(0), Parameters);
+
+		Block->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+		Blocks.Add(Block);
 	}
 }
