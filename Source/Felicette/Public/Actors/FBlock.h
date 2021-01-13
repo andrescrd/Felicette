@@ -16,7 +16,6 @@ public:
 	AFBlock();
 
 protected:
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	class UBoxComponent* BoxComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
