@@ -1,22 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Actors/FPickup.h"
+#include "Actors/FPickupTarget.h"
 
 // Sets default values
-AFPickup::AFPickup()
+AFPickupTarget::AFPickupTarget()
 {
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	MeshComponent->SetCanEverAffectNavigation(false);	
 	RootComponent = MeshComponent;
 	
-	
 	PrimaryActorTick.bCanEverTick = false;
-}
 
-// Called when the game starts or when spawned
-void AFPickup::BeginPlay()
+}
+void AFPickupTarget::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }

@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "FTeleport.generated.h"
+#include "FPickupTarget.generated.h"
 
 UCLASS()
-class FELICETTE_API AFTeleport : public AActor
+class FELICETTE_API AFPickupTarget : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	AFTeleport();
+	AFPickupTarget();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -22,5 +22,4 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	
 };
