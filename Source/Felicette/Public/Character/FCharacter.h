@@ -18,9 +18,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* TopDownCameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class USpringArmComponent* CameraBoom;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class UDecalComponent* CursorToWorld;
+	class USpringArmComponent* CameraBoom;	
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
