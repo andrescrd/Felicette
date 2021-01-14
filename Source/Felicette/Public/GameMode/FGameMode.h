@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "FelicetteGameMode.generated.h"
+#include "FGameMode.generated.h"
 
 UCLASS(minimalapi)
-class AFelicetteGameMode : public AGameModeBase
+class AFGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	AFelicetteGameMode();
+	AFGameMode();
 };
 
 

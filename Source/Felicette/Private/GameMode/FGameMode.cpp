@@ -1,14 +1,14 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "FelicetteGameMode.h"
-#include "FelicettePlayerController.h"
-#include "FelicetteCharacter.h"
+#include "GameMode/FGameMode.h"
+
+#include "Player/FPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
-AFelicetteGameMode::AFelicetteGameMode()
+AFGameMode::AFGameMode()
 {
 	// use our custom PlayerController class
-	PlayerControllerClass = AFelicettePlayerController::StaticClass();
+	PlayerControllerClass = AFPlayerController::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDownCPP/Blueprints/TopDownCharacter"));
