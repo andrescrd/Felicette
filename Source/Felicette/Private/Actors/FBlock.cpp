@@ -65,9 +65,10 @@ void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 	{
 		TimelineComponent->Play();
 		bActive = false;
+
+		if(MaterialSecondary)
+			MeshComponent->SetMaterial(0,MaterialSecondary);
 	}
 }
 
-void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-}
+void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor) { }

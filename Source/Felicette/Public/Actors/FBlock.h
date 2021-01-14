@@ -23,6 +23,8 @@ protected:
 	class UBoxComponent* BoxComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	class UMaterialInterface* MaterialSecondary;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UTimelineComponent* TimelineComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
