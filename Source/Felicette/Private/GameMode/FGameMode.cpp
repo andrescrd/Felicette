@@ -11,5 +11,5 @@
 AFGameMode::AFGameMode()
 {
 	PlayerControllerClass = AFPlayerController::StaticClass();
-	DefaultPawnClass = ASpectatorPawn::StaticClass();
+	// DefaultPawnClass = ASpectatorPawn::StaticClass();
 }
