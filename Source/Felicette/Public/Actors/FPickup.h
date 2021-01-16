@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Components/FRotatorComponent.h"
 #include "GameFramework/Actor.h"
 #include "FPickup.generated.h"
 
@@ -15,31 +17,12 @@ public:
 	// Sets default values for this actor's properties
 	AFPickup();
 
-protected:
-	FRotator StartRotation;
-	FRotator EndRotation;
-	
+protected:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UTimelineComponent* TimelineComponent;	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class UCurveFloat* Curve;	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FFloatRange DeltaRotation;	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)	
-	FFloatRange TimelineTime;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)	
-	bool bEnableMovement;	
+	class UFRotatorComponent* RotatorComponent;
 
 	virtual void BeginPlay() override;
-	void SetupAndPlayTimeline();
-	void GetRotationForTimeline();
-
-	UFUNCTION()
-	void OnTimelineHandler(float Value);
-	UFUNCTION()
-	void OnTimelineFinish();
-	
 public:
 };
