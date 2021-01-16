@@ -2,15 +2,14 @@
 
 #include "Character/FCharacter.h"
 
-#include "UObject/ConstructorHelpers.h"
+#include <activation.h>
+
 #include "Camera/CameraComponent.h"
-#include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
-#include "Materials/Material.h"
+#include "NiagaraFunctionLibrary.h"
+#include "PhysXInterfaceWrapperCore.h"
 #include "Engine/World.h"
 
 AFCharacter::AFCharacter()
@@ -45,4 +44,13 @@ AFCharacter::AFCharacter()
 void AFCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void AFCharacter::StartFX()
+{
+	if(NiagaraFX)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),NiagaraFX,GetMesh()->GetComponentLocation(),GetMesh()->GetComponentRotation(),GetMesh()->GetComponentScale());	
+		// SetActorHiddenInGame(true);;
+	}
 }

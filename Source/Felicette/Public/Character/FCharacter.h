@@ -19,9 +19,11 @@ protected:
 	class UCameraComponent* TopDownCameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class USpringArmComponent* CameraBoom;	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
+	class UNiagaraSystem* NiagaraFX;	
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
-	
+	void StartFX();	
 };
 
