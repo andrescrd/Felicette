@@ -17,10 +17,13 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UBoxComponent* BoxComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
 
 	virtual void BeginPlay() override;
 
 public:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
 };
