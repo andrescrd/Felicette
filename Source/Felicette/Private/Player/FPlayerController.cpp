@@ -1,12 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/FPlayerController.h"
-
-
 #include "DrawDebugHelpers.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Runtime/Engine/Classes/Components/DecalComponent.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Actors/FBlock.h"
 #include "Character/FCharacter.h"
 #include "Engine/World.h"
@@ -26,7 +22,7 @@ void AFPlayerController::PlayerTick(float DeltaTime)
 void AFPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	if (AActor* CurrentActor = UGameplayStatics::GetActorOfClass(GetWorld(), AFCharacter::StaticClass()))
 		MyPawn = Cast<APawn>(CurrentActor);
 }
@@ -45,9 +41,9 @@ void AFPlayerController::SetNewMoveDestination(const FVector DestLocation) const
 	{
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 		DrawDebugSphere(GetWorld(), DestLocation, 50, 8, FColor::Red, true, 3, 0, 3);
-			
-		if(AAIController* AI = Cast<AAIController>(MyPawn->GetController()))
-			AI->MoveToLocation(DestLocation,0,false);	
+
+		if (AAIController* AI = Cast<AAIController>(MyPawn->GetController()))
+			AI->MoveToLocation(DestLocation, 0, false);
 	}
 }
 
@@ -88,4 +84,3 @@ void AFPlayerController::MoveRight(float Value)
 			SetNewMoveDestination(HitResult.Actor->GetActorLocation());
 	}
 }
-
