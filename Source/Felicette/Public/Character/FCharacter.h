@@ -15,10 +15,10 @@ public:
 	AFCharacter();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class UCameraComponent* TopDownCameraComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class USpringArmComponent* CameraBoom;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	// class UCameraComponent* TopDownCameraComponent;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	// class USpringArmComponent* CameraBoom;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName PickerSocketName;
