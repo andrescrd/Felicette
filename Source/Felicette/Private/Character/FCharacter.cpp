@@ -4,6 +4,10 @@
 
 #include <activation.h>
 
+
+
+#include "AIController.h"
+#include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -46,11 +50,27 @@ void AFCharacter::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 }
 
-void AFCharacter::StartFX()
+FName AFCharacter::GetPickerSocketName() const { return PickerSocketName; }
+
+bool AFCharacter::IsMoving() const { return GetVelocity().Size() > 0; }
+
+void AFCharacter::SetNewMoveDestination(FVector DestLocation, const bool KeepAxisZValue) const
 {
-	if(NiagaraFX)
+	if(IsMoving())
+		return;
+	
+	float const Distance = FVector::Dist(DestLocation, GetActorLocation());
+	
+	if(KeepAxisZValue)
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),NiagaraFX,GetMesh()->GetComponentLocation(),GetMesh()->GetComponentRotation(),GetMesh()->GetComponentScale());	
-		// SetActorHiddenInGame(true);;
+		const float Radius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+		float NewZ= GetActorLocation().Z;
+		NewZ -= Radius;
+		DestLocation.Z = NewZ;
 	}
+	
+	DrawDebugSphere(GetWorld(), DestLocation, 50, 8, FColor::Red, true, 3, 0, 3);
+
+	if (AAIController* AI = Cast<AAIController>(GetController()))
+		AI->MoveToLocation(DestLocation, 5, false, false);
 }
