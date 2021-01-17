@@ -9,24 +9,24 @@ UFRotatorComponent::UFRotatorComponent()
 {
 	DeltaRotation = FFloatRange::Inclusive(-180, 180);
 	TimelineTime = FFloatRange::Inclusive(.5, 3);
-	bEnableMovement = true;
+	bAutoActivate = true;
 
-	TimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComponent"));
+	RotatorTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("RotatorTimeline"));
 
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
-
 
 // Called when the game starts
 void UFRotatorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (bEnableMovement)
-		SetupAndPlayTimeline();
+	SetupTimeline();
+	
+	if (bAutoActivate)
+		PlayTimeline();
 }
 
-void UFRotatorComponent::SetupAndPlayTimeline()
+void UFRotatorComponent::SetupTimeline()
 {
 	if (!Curve)
 		return;
@@ -37,14 +37,17 @@ void UFRotatorComponent::SetupAndPlayTimeline()
 	FOnTimelineEvent TimelineFinished;
 	TimelineFinished.BindUFunction(this, FName("OnTimelineFinish"));
 
-	TimelineComponent->AddInterpFloat(Curve, TimelineCallback);
-	TimelineComponent->SetTimelineFinishedFunc(TimelineFinished);
+	RotatorTimeline->AddInterpFloat(Curve, TimelineCallback);
+	RotatorTimeline->SetTimelineFinishedFunc(TimelineFinished);
 
-	TimelineComponent->SetIgnoreTimeDilation(true);
-	TimelineComponent->SetLooping(false);
+	RotatorTimeline->SetIgnoreTimeDilation(true);
+	RotatorTimeline->SetLooping(false);
+}
 
+void UFRotatorComponent::PlayTimeline()
+{
 	GetRotationForTimeline();
-	TimelineComponent->Play();
+	RotatorTimeline->PlayFromStart();
 }
 
 void UFRotatorComponent::GetRotationForTimeline()
@@ -55,9 +58,9 @@ void UFRotatorComponent::GetRotationForTimeline()
 	{
 		StartRotation = CurrentActor->GetActorRotation();
 		EndRotation = StartRotation;
-		EndRotation.Yaw = FMath::RandRange(DeltaRotation.GetLowerBound().GetValue(), DeltaRotation.GetUpperBound().GetValue());
+		EndRotation.Yaw += FMath::RandRange(DeltaRotation.GetLowerBound().GetValue(), DeltaRotation.GetUpperBound().GetValue());
 		const float NewRate = 1 / FMath::RandRange(TimelineTime.GetLowerBound().GetValue(), TimelineTime.GetUpperBound().GetValue());;
-		TimelineComponent->SetPlayRate(NewRate);
+		RotatorTimeline->SetPlayRate(NewRate);
 	}
 }
 
@@ -69,8 +72,16 @@ void UFRotatorComponent::OnTimelineHandler(float Value)
 		CurrentActor->SetActorRotation(FMath::Lerp(StartRotation, EndRotation, Value));
 }
 
-void UFRotatorComponent::OnTimelineFinish()
+void UFRotatorComponent::OnTimelineFinish() { PlayTimeline(); }
+
+void UFRotatorComponent::Activate(bool bReset)
 {
-	GetRotationForTimeline();
-	TimelineComponent->PlayFromStart();
+	Super::Activate(bReset);
+	PlayTimeline();
+}
+
+void UFRotatorComponent::Deactivate()
+{
+	Super::Deactivate();
+	RotatorTimeline->Deactivate();
 }

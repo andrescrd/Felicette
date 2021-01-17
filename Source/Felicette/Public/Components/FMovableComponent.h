@@ -4,41 +4,41 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "FRotatorComponent.generated.h"
+#include "FMovableComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class FELICETTE_API UFRotatorComponent : public UActorComponent
+class FELICETTE_API UFMovableComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UFRotatorComponent();
+	UFMovableComponent();
 
 protected:
-	FRotator StartRotation;
-	FRotator EndRotation;
-	class UTimelineComponent* RotatorTimeline;
-		
+	FVector StartLocation;
+	FVector EndLocation;
+	class UTimelineComponent* MovableTimeline;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UCurveFloat* Curve;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FFloatRange DeltaRotation;	
+	FFloatRange OffsetZ;	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)	
-	FFloatRange TimelineTime;	
+	FFloatRange TimelineTime;
 
 	virtual void BeginPlay() override;
 	void SetupTimeline();
 	void PlayTimeline();
-	void GetRotationForTimeline();
+	void GetLocationForTimeline();
 
 	UFUNCTION()
-	void OnTimelineHandler(float Value);
+    void OnTimelineHandler(float Value);
 	UFUNCTION()
-	void OnTimelineFinish();
-	
-public:	
+    void OnTimelineFinish();
+
+public:
 	virtual void Activate(bool bReset) override;
 	virtual void Deactivate() override;
+
 };
