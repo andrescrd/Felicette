@@ -24,7 +24,7 @@ void AFPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	if (AActor* CurrentActor = UGameplayStatics::GetActorOfClass(GetWorld(), AFCharacter::StaticClass()))
-		MyPawn = Cast<APawn>(CurrentActor);
+		MyCharacter = Cast<AFCharacter>(CurrentActor);
 }
 
 void AFPlayerController::SetupInputComponent()
@@ -37,26 +37,20 @@ void AFPlayerController::SetupInputComponent()
 
 void AFPlayerController::SetNewMoveDestination(const FVector DestLocation) const
 {
-	if (MyPawn)
-	{
-		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
-		DrawDebugSphere(GetWorld(), DestLocation, 50, 8, FColor::Red, true, 3, 0, 3);
-
-		if (AAIController* AI = Cast<AAIController>(MyPawn->GetController()))
-			AI->MoveToLocation(DestLocation, 0, false);
-	}
+	if (MyCharacter)
+		MyCharacter->SetNewMoveDestination(DestLocation, true);
 }
 
 void AFPlayerController::MoveForward(float Value)
 {
-	if (MyPawn)
+	if (MyCharacter && Value != 0)
 	{
-		FVector StartLocation = MyPawn->GetActorLocation();
+		FVector StartLocation = MyCharacter->GetActorLocation();
 		StartLocation.X += DistanceToMove * Value;
 		StartLocation.Z += 100;
 
 		FVector EndLocation = StartLocation;
-		EndLocation.Z -= 300;
+		EndLocation.Z -= 200;
 
 		FHitResult HitResult;
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_WorldDynamic);
@@ -68,14 +62,14 @@ void AFPlayerController::MoveForward(float Value)
 
 void AFPlayerController::MoveRight(float Value)
 {
-	if (MyPawn)
+	if (MyCharacter && Value != 0)
 	{
-		FVector StartLocation = MyPawn->GetActorLocation();
+		FVector StartLocation = MyCharacter->GetActorLocation();
 		StartLocation.Y += DistanceToMove * Value;
 		StartLocation.Z += 100;
 
 		FVector EndLocation = StartLocation;
-		EndLocation.Z -= 300;
+		EndLocation.Z -= 200;
 
 		FHitResult HitResult;
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_WorldDynamic);

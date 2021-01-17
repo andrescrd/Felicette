@@ -28,6 +28,6 @@ void AFTeleport::BeginPlay()
 
 void AFTeleport::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	if(AFCharacter* Character = Cast<AFCharacter>(OtherActor))
-		Character->StartFX();
+	// if(AFCharacter* Character = Cast<AFCharacter>(OtherActor))
+		// Character->StartFX();
 }

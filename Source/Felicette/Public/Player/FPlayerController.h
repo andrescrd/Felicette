@@ -16,7 +16,7 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class APawn* MyPawn;
+	class AFCharacter* MyCharacter;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float DistanceToMove;
 	

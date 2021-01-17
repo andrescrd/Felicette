@@ -36,6 +36,6 @@ protected:
 public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
-	void Picked(class ACharacter* Other);
+	void Picked(class AFCharacter* Other);
 	void Drop();
 };

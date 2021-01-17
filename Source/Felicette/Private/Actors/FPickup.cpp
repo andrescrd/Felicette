@@ -35,22 +35,21 @@ void AFPickup::BeginPlay()
 
 void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	if (OtherActor->IsA(AFCharacter::StaticClass()))
+	if (AFCharacter* Character =  Cast<AFCharacter>(OtherActor))
 	{
 		MovableComponent->Deactivate();
-		Picked(Cast<ACharacter>(OtherActor));
+		Picked(Character);
 	}
 }
 
-void AFPickup::Picked(ACharacter* Other)
+void AFPickup::Picked(AFCharacter* Other)
 {
-	DrawDebugSphere(GetWorld(), Other->GetActorLocation(), 50, 8, FColor::Green, true, 3, 0, 3);
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	const FAttachmentTransformRules Rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
 	                                                                  EAttachmentRule::KeepRelative,
 	                                                                  EAttachmentRule::KeepRelative, true);
-	AttachToComponent(Other->GetMesh(), Rules);
+	AttachToComponent(Other->GetMesh(), Rules, Other->GetPickerSocketName());
 }
 
 void AFPickup::Drop()
