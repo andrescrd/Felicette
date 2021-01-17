@@ -9,6 +9,8 @@
 #include "Components/FRotatorComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
+#include "Support/Enums/FPickedTypeEnum.h"
+
 #include "FPickup.generated.h"
 
 UCLASS()
@@ -25,17 +27,23 @@ protected:
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComponent;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	TSubclassOf<class AFDisolver> DisolverClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFRotatorComponent* RotatorComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFMovableComponent* MovableComponent;
 	
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	FPickedTypeEnum PickedType;
+	
 	virtual void BeginPlay() override;
 	
 public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	FPickedTypeEnum GetPickedType() const;
 	void Picked(class AFCharacter* Other);
-	void Drop();
+	void Drop(bool SpawnEmmiter = false);
 };

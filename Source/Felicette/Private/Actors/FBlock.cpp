@@ -59,8 +59,6 @@ void AFBlock::OnTimelineHandler(const float Output)
 
 void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 {
-	GEngine->AddOnScreenDebugMessage(1, 3, FColor::Green, TEXT("Overlap"));
-
 	if (bActive && OtherActor->IsA(ACharacter::StaticClass()))
 	{
 		TimelineComponent->Play();

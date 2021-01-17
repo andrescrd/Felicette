@@ -2,17 +2,18 @@
 
 
 #include "Actors/FPickup.h"
-
-
 #include "DrawDebugHelpers.h"
 #include "Character/FCharacter.h"
 #include "Components/FMovableComponent.h"
 #include "Components/FRotatorComponent.h"
 #include "Components/SphereComponent.h"
+#include "Actors/FDisolver.h"
 
 // Sets default values
 AFPickup::AFPickup()
 {
+	PickedType = FPickedTypeEnum::DEFAULT;
+
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetSphereRadius(256);
 	RootComponent = SphereComponent;
@@ -35,12 +36,16 @@ void AFPickup::BeginPlay()
 
 void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	if (AFCharacter* Character =  Cast<AFCharacter>(OtherActor))
+	if (AFCharacter* Character = Cast<AFCharacter>(OtherActor))
 	{
 		MovableComponent->Deactivate();
 		Picked(Character);
 	}
 }
+
+FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
+
+
 
 void AFPickup::Picked(AFCharacter* Other)
 {
@@ -52,11 +57,20 @@ void AFPickup::Picked(AFCharacter* Other)
 	AttachToComponent(Other->GetMesh(), Rules, Other->GetPickerSocketName());
 }
 
-void AFPickup::Drop()
+void AFPickup::Drop(const bool SpawnEmmiter)
 {
 	const FDetachmentTransformRules Rules = FDetachmentTransformRules(EDetachmentRule::KeepWorld,
 	                                                                  EDetachmentRule::KeepRelative,
 	                                                                  EDetachmentRule::KeepRelative, true);
-	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	DetachFromActor(Rules);
+
+	if(SpawnEmmiter && DisolverClass)
+	{	
+		AFDisolver* Dissolved = GetWorld()->SpawnActorDeferred<AFDisolver>(DisolverClass, GetTransform(),this, GetInstigator());
+			
+		Dissolved->SetSourceActor(this);
+		Dissolved->FinishSpawning(GetTransform(),true);
+	}
+
+	Destroy();
 }

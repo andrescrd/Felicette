@@ -3,16 +3,24 @@
 
 #include "Actors/FPickupTarget.h"
 
+
+#include "Components/BoxComponent.h"
 #include "Engine/EngineTypes.h"
 
 // Sets default values
 AFPickupTarget::AFPickupTarget()
 {
+	PickedType = FPickedTypeEnum::DEFAULT;
+	
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	BoxComponent->InitBoxExtent(FVector(8,8,64));
+	RootComponent = BoxComponent;
+	
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetSimulatePhysics(true);
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	MeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	RootComponent = MeshComponent;
+	MeshComponent->SetupAttachment(RootComponent);
 	
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -20,4 +28,15 @@ AFPickupTarget::AFPickupTarget()
 void AFPickupTarget::BeginPlay()
 {
 	Super::BeginPlay();	
+}
+
+void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	AFPickup* PickedActor = Cast<AFPickup>(OtherActor);
+	
+	if (PickedActor != nullptr && PickedActor->GetPickedType() == PickedType)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 3, FColor::Green, FString::Printf(TEXT("Overlap: %s"), *OtherActor->GetActorLabel()));
+		PickedActor->Drop(true);		
+	}
 }

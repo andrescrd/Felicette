@@ -3,6 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+
+#include "FDisolver.h"
+#include "FPickup.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "FPickupTarget.generated.h"
 
@@ -17,9 +22,18 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UBoxComponent* BoxComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
-
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	FPickedTypeEnum PickedType;
+	
 	virtual void BeginPlay() override;
 
 public:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTest(AActor* OtherActor);
+	
 };
