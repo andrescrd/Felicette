@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 
+
+#include "Components/FMovableComponent.h"
 #include "Components/FRotatorComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "FPickup.generated.h"
 
@@ -21,8 +24,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UFRotatorComponent* RotatorComponent;
+	USphereComponent* SphereComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UFRotatorComponent* RotatorComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UFMovableComponent* MovableComponent;
+	
 	virtual void BeginPlay() override;
+	
 public:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	void Picked(class ACharacter* Other);
+	void Drop();
 };
