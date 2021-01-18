@@ -45,8 +45,6 @@ void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 
 FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
 
-
-
 void AFPickup::Picked(AFCharacter* Other)
 {
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -66,10 +64,10 @@ void AFPickup::Drop(const bool SpawnEmmiter)
 
 	if(SpawnEmmiter && DisolverClass)
 	{	
-		AFDisolver* Dissolved = GetWorld()->SpawnActorDeferred<AFDisolver>(DisolverClass, GetTransform(),this, GetInstigator());
+		AFDisolver* Dissolved = GetWorld()->SpawnActorDeferred<AFDisolver>(DisolverClass,MeshComponent->GetComponentTransform(),this, GetInstigator());
 			
 		Dissolved->SetSourceActor(this);
-		Dissolved->FinishSpawning(GetTransform(),true);
+		Dissolved->FinishSpawning(MeshComponent->GetComponentTransform(),true);
 	}
 
 	Destroy();

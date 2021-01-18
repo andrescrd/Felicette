@@ -35,8 +35,5 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 	AFPickup* PickedActor = Cast<AFPickup>(OtherActor);
 	
 	if (PickedActor != nullptr && PickedActor->GetPickedType() == PickedType)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 3, FColor::Green, FString::Printf(TEXT("Overlap: %s"), *OtherActor->GetActorLabel()));
 		PickedActor->Drop(true);		
-	}
 }

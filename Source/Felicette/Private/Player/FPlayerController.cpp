@@ -2,7 +2,6 @@
 
 #include "Player/FPlayerController.h"
 #include "DrawDebugHelpers.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Actors/FBlock.h"
 #include "Character/FCharacter.h"
 #include "Engine/World.h"
@@ -47,34 +46,42 @@ void AFPlayerController::MoveForward(float Value)
 	{
 		FVector StartLocation = MyCharacter->GetActorLocation();
 		StartLocation.X += DistanceToMove * Value;
-		StartLocation.Z += 100;
-
-		FVector EndLocation = StartLocation;
-		EndLocation.Z -= 200;
-
-		FHitResult HitResult;
-		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_WorldDynamic);
-
-		if (HitResult.Actor != nullptr && HitResult.Actor->IsA(AFBlock::StaticClass()))
-			SetNewMoveDestination(HitResult.Actor->GetActorLocation());
+		DoMovement(StartLocation);
 	}
 }
 
 void AFPlayerController::MoveRight(float Value)
 {
-	if (MyCharacter && Value != 0)
+	if(MyCharacter && Value!=0)
 	{
 		FVector StartLocation = MyCharacter->GetActorLocation();
 		StartLocation.Y += DistanceToMove * Value;
-		StartLocation.Z += 100;
+		DoMovement(StartLocation);
+	}
+}
 
-		FVector EndLocation = StartLocation;
-		EndLocation.Z -= 200;
+void AFPlayerController::DoMovement(FVector StartLocation) const
+{
+	StartLocation.Z += 100;
 
-		FHitResult HitResult;
-		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_WorldDynamic);
+	FVector EndLocation = StartLocation;
+	EndLocation.Z -= 200;
 
-		if (HitResult.Actor != nullptr && HitResult.Actor->IsA(AFBlock::StaticClass()))
-			SetNewMoveDestination(HitResult.Actor->GetActorLocation());
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_WorldDynamic);
+
+	if (HitResult.Actor != nullptr && HitResult.Actor->IsA(AFBlock::StaticClass()))
+		SetNewMoveDestination(HitResult.Actor->GetActorLocation());
+}
+
+void AFPlayerController::ToggleInput(const bool Enable)
+{
+	if (Enable)
+	{
+		EnableInput(this);
+	}
+	else
+	{
+		DisableInput(this);
 	}
 }
