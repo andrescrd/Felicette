@@ -25,9 +25,13 @@ protected:
 	virtual void SetupInputComponent() override;
 
 	void SetNewMoveDestination(const FVector DestLocation) const;
-
+	void DoMovement(FVector StartLocation) const;
+	
 	void MoveForward(float Value);
-	void MoveRight(float Value);
+	void MoveRight(float Value);	
+
+public:
+	void ToggleInput(bool Enable);
 };
 
 

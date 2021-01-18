@@ -27,7 +27,7 @@ protected:
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComponent;
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<class AFDisolver> DisolverClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
