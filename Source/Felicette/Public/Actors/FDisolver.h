@@ -19,14 +19,19 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USceneComponent* SceneComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UNiagaraComponent* NiagaraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AActor* SourceActor;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName StaticMeshParameter;
-
+	
 	virtual void BeginPlay() override;
 	void StartDisolve() const;
+
+	UFUNCTION()
+	void HandleOnSystemFinished(class UNiagaraComponent* PSystem);
 	
 public:
 	void SetSourceActor(class AActor* Source);
