@@ -15,3 +15,7 @@ Saved
 *.xcodeproj
 *.xcworkspace
 
+Build
+Packages
+Content/AdvancedCelShader
+
