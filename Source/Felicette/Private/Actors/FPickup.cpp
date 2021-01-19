@@ -55,12 +55,15 @@ void AFPickup::Picked(AFCharacter* Other)
 	AttachToComponent(Other->GetMesh(), Rules, Other->GetPickerSocketName());
 }
 
-void AFPickup::Drop(const bool SpawnEmmiter)
+void AFPickup::Drop(const FVector EndLocation , const bool SpawnEmmiter)
 {
 	const FDetachmentTransformRules Rules = FDetachmentTransformRules(EDetachmentRule::KeepWorld,
 	                                                                  EDetachmentRule::KeepRelative,
 	                                                                  EDetachmentRule::KeepRelative, true);
 	DetachFromActor(Rules);
+
+	if (!EndLocation.IsZero())
+		SetActorLocation(EndLocation);
 
 	if(SpawnEmmiter && DisolverClass)
 	{	
