@@ -32,6 +32,7 @@ void AFBlock::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupTimeline();
+	MaterialPrimary = MeshComponent->GetMaterial(0);
 }
 
 void AFBlock::SetupTimeline()
@@ -42,7 +43,7 @@ void AFBlock::SetupTimeline()
 	FOnTimelineFloat TimelineCallback;
 	TimelineCallback.BindUFunction(this, FName("OnTimelineHandler"));
 	TimelineComponent->AddInterpFloat(Curve, TimelineCallback);
-	
+
 	const float NewRate = 1 / TimelineTime;
 	TimelineComponent->SetPlayRate(NewRate);
 	TimelineComponent->SetIgnoreTimeDilation(true);
@@ -64,9 +65,35 @@ void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 		TimelineComponent->Play();
 		bActive = false;
 
-		if(MaterialSecondary)
-			MeshComponent->SetMaterial(0,MaterialSecondary);
+		if (MaterialSecondary)
+			MeshComponent->SetMaterial(0, MaterialSecondary);
 	}
 }
 
-void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor) { }
+void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+}
+
+bool AFBlock::IsValidLocation(const FVector Vector)
+{
+	// TODO: check if location is valid to move
+	return true;
+}
+
+void AFBlock::NotifyActorBeginCursorOver()
+{
+	if (IsValidLocation(GetActorLocation()) && !bIsHighlighted && MaterialHeiglight)
+	{
+		MeshComponent->SetMaterial(0, MaterialHeiglight);
+		bIsHighlighted = true;
+	}
+}
+
+void AFBlock::NotifyActorEndCursorOver()
+{
+	if (bIsHighlighted && MaterialPrimary)
+	{
+		MeshComponent->SetMaterial(0, MaterialPrimary);
+		bIsHighlighted = false;
+	}
+}
