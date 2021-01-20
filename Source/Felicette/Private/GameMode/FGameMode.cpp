@@ -2,8 +2,8 @@
 
 #include "GameMode/FGameMode.h"
 
-
 #include "Actors/FPickup.h"
+#include "Actors/FTeleport.h"
 #include "GameStates/FGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/FPlayerController.h"
@@ -32,8 +32,10 @@ void AFGameMode::AddPickedCollected(const int Value)
 	PickedCollected += Value;
 
 	if (PickedCounter == PickedCollected)
-		SetGameStatus(FGameStatusEnum::FINISH);
+		SetGameStatus(FGameStatusEnum::COMPLETE);
 }
+
+void AFGameMode::SetPlayerOnTeleport() { SetGameStatus(FGameStatusEnum::FINISH); }
 
 void AFGameMode::SetGameStatus(const FGameStatusEnum CurrentGameStatus)
 {
@@ -49,16 +51,23 @@ void AFGameMode::Preparing()
 {
 	TogglePlayerInput(false);
 
-	TArray<AActor*> OutActors;
-	UGameplayStatics::GetAllActorsOfClass(this, AFPickup::StaticClass(), OutActors);
-	PickedCounter = OutActors.Num();
+	TArray<AActor*> PickupActors;
+	UGameplayStatics::GetAllActorsOfClass(this, AFPickup::StaticClass(), PickupActors);
+	PickedCounter = PickupActors.Num();
+
+	AActor* Actor = UGameplayStatics::GetActorOfClass(this, AFTeleport::StaticClass());
+
+	if (Actor)
+		Teleport = Cast<AFTeleport>(Actor);
 
 	SetGameStatus(FGameStatusEnum::PLAYING);
 }
 
-void AFGameMode::Playing() { TogglePlayerInput(true); }
+void AFGameMode::Playing() const { TogglePlayerInput(true); }
 
-void AFGameMode::Finished() { TogglePlayerInput(false); }
+void AFGameMode::Complete() const { Teleport->SetIsActivated(true); }
+
+void AFGameMode::Finished() const { TogglePlayerInput(false); }
 
 void AFGameMode::TogglePlayerInput(const bool Enable) const
 {
@@ -76,6 +85,9 @@ void AFGameMode::HandleGameStatus(const FGameStatusEnum CurrentGameStatus)
 		break;
 	case FGameStatusEnum::PLAYING:
 		Playing();
+		break;
+	case FGameStatusEnum::COMPLETE:
+		Complete();
 		break;
 	case FGameStatusEnum::FINISH:
 		Finished();

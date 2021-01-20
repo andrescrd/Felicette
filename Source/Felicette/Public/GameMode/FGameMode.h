@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Actors/FTeleport.h"
 #include "GameFramework/GameModeBase.h"
 #include "Support/Enums/FGameStatusEnum.h"
 
@@ -20,22 +22,25 @@ protected:
 	FGameStatusEnum GameStatus;
 	int PickedCounter;
 	int PickedCollected;
+	AFTeleport* Teleport;
 
 	virtual void BeginPlay() override;
-	
+
 	void SetGameStatus(FGameStatusEnum CurrentGameStatus);
 	void TogglePlayerInput(const bool Enable) const;
 	void HandleGameStatus(FGameStatusEnum CurrentGameStatus);
 
 	void Preparing();
-	void Playing();
-	void Finished();
-	
+	void Playing() const;
+	void Complete() const;
+	void Finished() const;
+
 	UFUNCTION(BlueprintImplementableEvent)
-    void OnGameStatusChange(FGameStatusEnum CurrentGameStatus);
+	void OnGameStatusChange(FGameStatusEnum CurrentGameStatus);
 
 public:
 	void AddPickedCollected(const int Value);
+	void SetPlayerOnTeleport();
 
 	UFUNCTION(BlueprintCallable)
 	FGameStatusEnum GetGameStatus() const;
