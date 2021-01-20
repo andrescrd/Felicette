@@ -8,6 +8,7 @@
 #include "Engine/EngineTypes.h"
 #include "NiagaraComponent.h"
 #include "NiagaraDataInterfaceStaticMesh.h"
+#include "GameMode/FGameMode.h"
 
 // Sets default values
 AFPickupTarget::AFPickupTarget()
@@ -21,7 +22,7 @@ AFPickupTarget::AFPickupTarget()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetSimulatePhysics(true);
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	MeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	MeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECR_Overlap);
 	MeshComponent->SetupAttachment(RootComponent);
 
 	PrimaryActorTick.bCanEverTick = false;
@@ -37,8 +38,11 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 	AFPickup* PickedActor = Cast<AFPickup>(OtherActor);
 
 	if (PickedActor != nullptr && PickedActor->GetPickedType() == PickedType)
-	{
+	{		
 		OnPickedCollected(PickedActor);
-		PickedActor->Drop();
+
+		AFGameMode* GM = GetWorld()->GetAuthGameMode<AFGameMode>();
+		GM->AddPickedCollected(1);
+		PickedActor->Drop();		
 	}
 }

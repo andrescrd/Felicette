@@ -8,15 +8,19 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Character/FCharacter.h"
 #include "Components/BoxComponent.h"
+#include "GameMode/FGameMode.h"
 
 // Sets default values
 AFTeleport::AFTeleport()
 {
+	bIsActivated = false;
+
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCOmponent"));
 	BoxComponent->SetBoxExtent(FVector(8, 8, 32));
 	RootComponent = BoxComponent;
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetSimulatePhysics(true);
+	MeshComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECR_Overlap);
 	MeshComponent->SetupAttachment(RootComponent);
 
 	PrimaryActorTick.bCanEverTick = false;
@@ -30,8 +34,13 @@ void AFTeleport::BeginPlay()
 
 void AFTeleport::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	if (OtherActor->IsA(AFCharacter::StaticClass()))
+	if (OtherActor->IsA(AFCharacter::StaticClass()) && bIsActivated)
 	{
-		OnCharacterWin(Cast<AFCharacter>(OtherActor));
+		OnCharacterEnter(Cast<AFCharacter>(OtherActor));
+
+		AFGameMode* GM = GetWorld()->GetAuthGameMode<AFGameMode>();
+		GM->SetPlayerOnTeleport();
 	}
 }
+
+void AFTeleport::SetIsActivated(const bool IsActivated) { bIsActivated = IsActivated; }

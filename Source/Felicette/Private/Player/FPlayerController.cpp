@@ -11,6 +11,12 @@
 AFPlayerController::AFPlayerController()
 {
 	DistanceToMove = 120;
+
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
+	bEnableTouchEvents = true;
+	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
 void AFPlayerController::PlayerTick(float DeltaTime)
@@ -52,7 +58,7 @@ void AFPlayerController::MoveForward(float Value)
 
 void AFPlayerController::MoveRight(float Value)
 {
-	if(MyCharacter && Value!=0)
+	if (MyCharacter && Value != 0)
 	{
 		FVector StartLocation = MyCharacter->GetActorLocation();
 		StartLocation.Y += DistanceToMove * Value;

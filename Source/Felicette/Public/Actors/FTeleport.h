@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 
-#include "NiagaraComponent.h"
 #include "Character/FCharacter.h"
 #include "GameFramework/Actor.h"
 #include "FTeleport.generated.h"
@@ -22,14 +21,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UBoxComponent* BoxComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UStaticMeshComponent* MeshComponent;	
+	class UStaticMeshComponent* MeshComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsActivated;
 
 	virtual void BeginPlay() override;
 
 public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void SetIsActivated(bool IsActivated);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnCharacterWin(AFCharacter* Character);
+	void OnCharacterEnter(AFCharacter* Character);
 	
 };
