@@ -42,7 +42,7 @@ protected:
 	float OffsetZ;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float TimelineTime;
-	
+
 	virtual void BeginPlay() override;
 	void SetupTimeline();
 
@@ -53,7 +53,9 @@ public:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
-	bool IsValidLocation(const FVector Vector);
 	virtual void NotifyActorBeginCursorOver() override;
 	virtual void NotifyActorEndCursorOver() override;
+
+	bool IsValidLocation(const FVector Vector);
+	bool IsActive() const;
 };

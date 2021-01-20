@@ -6,6 +6,7 @@
 #include "Character/FCharacter.h"
 #include "Engine/World.h"
 #include "AIController.h"
+#include "Actors/FTeleport.h"
 #include "Kismet/GameplayStatics.h"
 
 AFPlayerController::AFPlayerController()
@@ -38,6 +39,7 @@ void AFPlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("MoveForward", this, &AFPlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AFPlayerController::MoveRight);
+	InputComponent->BindAction("SetDestination", EInputEvent::IE_Pressed, this, &AFPlayerController::OnDestination);
 }
 
 void AFPlayerController::SetNewMoveDestination(const FVector DestLocation) const
@@ -63,6 +65,21 @@ void AFPlayerController::MoveRight(float Value)
 		FVector StartLocation = MyCharacter->GetActorLocation();
 		StartLocation.Y += DistanceToMove * Value;
 		DoMovement(StartLocation);
+	}
+}
+
+void AFPlayerController::OnDestination()
+{
+	FHitResult HitResult;
+	GetHitResultUnderCursorByChannel(ETraceTypeQuery::TraceTypeQuery1, false, HitResult);	
+	
+	if (HitResult.GetActor() != nullptr &&
+		HitResult.GetActor()->IsA(AFBlock::StaticClass()))
+	{
+		AFBlock* Block = Cast<AFBlock>(HitResult.GetActor());
+
+		if(Block->IsActive())
+			SetNewMoveDestination(HitResult.GetActor()->GetActorLocation());
 	}
 }
 

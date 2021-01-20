@@ -80,9 +80,11 @@ bool AFBlock::IsValidLocation(const FVector Vector)
 	return true;
 }
 
+bool AFBlock::IsActive() const { return bActive; }
+
 void AFBlock::NotifyActorBeginCursorOver()
 {
-	if (IsValidLocation(GetActorLocation()) && !bIsHighlighted && MaterialHeiglight)
+	if (IsValidLocation(GetActorLocation()) && !bIsHighlighted && MaterialHeiglight && bActive)
 	{
 		MeshComponent->SetMaterial(0, MaterialHeiglight);
 		bIsHighlighted = true;
@@ -91,7 +93,7 @@ void AFBlock::NotifyActorBeginCursorOver()
 
 void AFBlock::NotifyActorEndCursorOver()
 {
-	if (bIsHighlighted && MaterialPrimary)
+	if (bIsHighlighted && MaterialPrimary && bActive)
 	{
 		MeshComponent->SetMaterial(0, MaterialPrimary);
 		bIsHighlighted = false;
