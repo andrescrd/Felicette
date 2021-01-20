@@ -27,9 +27,7 @@ protected:
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComponent;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<class AFDisolver> DisolverClass;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFRotatorComponent* RotatorComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -45,5 +43,5 @@ public:
 
 	FPickedTypeEnum GetPickedType() const;
 	void Picked(class AFCharacter* Other);
-	void Drop(const FVector EndLocation = FVector::ZeroVector, bool SpawnEmmiter = false);
+	void Drop();
 };

@@ -7,7 +7,6 @@
 #include "Components/FMovableComponent.h"
 #include "Components/FRotatorComponent.h"
 #include "Components/SphereComponent.h"
-#include "Actors/FDisolver.h"
 
 // Sets default values
 AFPickup::AFPickup()
@@ -55,23 +54,11 @@ void AFPickup::Picked(AFCharacter* Other)
 	AttachToComponent(Other->GetMesh(), Rules, Other->GetPickerSocketName());
 }
 
-void AFPickup::Drop(const FVector EndLocation , const bool SpawnEmmiter)
+void AFPickup::Drop()
 {
 	const FDetachmentTransformRules Rules = FDetachmentTransformRules(EDetachmentRule::KeepWorld,
 	                                                                  EDetachmentRule::KeepRelative,
 	                                                                  EDetachmentRule::KeepRelative, true);
 	DetachFromActor(Rules);
-
-	if (!EndLocation.IsZero())
-		SetActorLocation(EndLocation);
-
-	if(SpawnEmmiter && DisolverClass)
-	{	
-		AFDisolver* Dissolved = GetWorld()->SpawnActorDeferred<AFDisolver>(DisolverClass,MeshComponent->GetComponentTransform(),this, GetInstigator());
-			
-		Dissolved->SetSourceActor(this);
-		Dissolved->FinishSpawning(MeshComponent->GetComponentTransform(),true);
-	}
-
 	Destroy();
 }

@@ -3,6 +3,9 @@
 
 #include "Actors/FTeleport.h"
 
+
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Character/FCharacter.h"
 #include "Components/BoxComponent.h"
 
@@ -10,7 +13,7 @@
 AFTeleport::AFTeleport()
 {
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCOmponent"));
-	BoxComponent->SetBoxExtent(FVector(8,8,32));
+	BoxComponent->SetBoxExtent(FVector(8, 8, 32));
 	RootComponent = BoxComponent;
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetSimulatePhysics(true);
@@ -23,11 +26,12 @@ AFTeleport::AFTeleport()
 void AFTeleport::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AFTeleport::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	// if(AFCharacter* Character = Cast<AFCharacter>(OtherActor))
-		// Character->StartFX();
+	if (OtherActor->IsA(AFCharacter::StaticClass()))
+	{
+		OnCharacterWin(Cast<AFCharacter>(OtherActor));
+	}
 }

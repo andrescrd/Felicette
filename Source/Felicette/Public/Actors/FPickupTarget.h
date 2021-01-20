@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 
-
-#include "FDisolver.h"
 #include "FPickup.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
@@ -27,13 +25,12 @@ protected:
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
 	FPickedTypeEnum PickedType;
-	
+
 	virtual void BeginPlay() override;
 
 public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnTest(AActor* OtherActor);
-	
+	void OnPickedCollected(AFPickup* OtherActor);
 };

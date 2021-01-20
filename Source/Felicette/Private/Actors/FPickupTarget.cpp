@@ -3,15 +3,17 @@
 
 #include "Actors/FPickupTarget.h"
 
-
+#include "NiagaraFunctionLibrary.h"
 #include "Components/BoxComponent.h"
 #include "Engine/EngineTypes.h"
+#include "NiagaraComponent.h"
+#include "NiagaraDataInterfaceStaticMesh.h"
 
 // Sets default values
 AFPickupTarget::AFPickupTarget()
 {
 	PickedType = FPickedTypeEnum::DEFAULT;
-
+	
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	BoxComponent->InitBoxExtent(FVector(8, 8, 64));
 	RootComponent = BoxComponent;
@@ -36,8 +38,7 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (PickedActor != nullptr && PickedActor->GetPickedType() == PickedType)
 	{
-		FVector EndLocation = MeshComponent->GetComponentLocation();
-		EndLocation.Z += 80;
-		PickedActor->Drop(EndLocation, true);
+		OnPickedCollected(PickedActor);
+		PickedActor->Drop();
 	}
 }
