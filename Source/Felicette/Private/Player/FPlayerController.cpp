@@ -6,12 +6,11 @@
 #include "Character/FCharacter.h"
 #include "Engine/World.h"
 #include "AIController.h"
-#include "Actors/FTeleport.h"
 #include "Kismet/GameplayStatics.h"
 
 AFPlayerController::AFPlayerController()
 {
-	DistanceToMove = 120;
+	DistanceToMove = 220;
 
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
@@ -36,9 +35,6 @@ void AFPlayerController::BeginPlay()
 void AFPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
-	InputComponent->BindAxis("MoveForward", this, &AFPlayerController::MoveForward);
-	InputComponent->BindAxis("MoveRight", this, &AFPlayerController::MoveRight);
 	InputComponent->BindAction("SetDestination", EInputEvent::IE_Pressed, this, &AFPlayerController::OnDestination);
 }
 
@@ -48,26 +44,7 @@ void AFPlayerController::SetNewMoveDestination(const FVector DestLocation) const
 		MyCharacter->SetNewMoveDestination(DestLocation, true);
 }
 
-void AFPlayerController::MoveForward(float Value)
-{
-	if (MyCharacter && Value != 0)
-	{
-		FVector StartLocation = MyCharacter->GetActorLocation();
-		StartLocation.X += DistanceToMove * Value;
-		DoMovement(StartLocation);
-	}
-}
-
-void AFPlayerController::MoveRight(float Value)
-{
-	if (MyCharacter && Value != 0)
-	{
-		FVector StartLocation = MyCharacter->GetActorLocation();
-		StartLocation.Y += DistanceToMove * Value;
-		DoMovement(StartLocation);
-	}
-}
-
+// ReSharper disable once CppMemberFunctionMayBeConst
 void AFPlayerController::OnDestination()
 {
 	FHitResult HitResult;
@@ -78,23 +55,21 @@ void AFPlayerController::OnDestination()
 	{
 		AFBlock* Block = Cast<AFBlock>(HitResult.GetActor());
 
+		FVector BlockLocation = Block->GetActorLocation();
+		const FVector CharacterLocation = MyCharacter->GetActorLocation();
+
+		BlockLocation.Z = CharacterLocation.Z;		
+		const float Distance = (BlockLocation - CharacterLocation).Size();
+
+		DrawDebugLine(GetWorld(),CharacterLocation, BlockLocation,FColor::Green, true,3,0,5);			
+		GEngine->AddOnScreenDebugMessage(1,2,FColor::Green,FString::Printf(TEXT("Distance is %f and max is  %f" ),Distance,DistanceToMove));
+		
+		if(Distance > DistanceToMove)
+			return;
+		
 		if(Block->IsActive())
 			SetNewMoveDestination(HitResult.GetActor()->GetActorLocation());
 	}
-}
-
-void AFPlayerController::DoMovement(FVector StartLocation) const
-{
-	StartLocation.Z += 100;
-
-	FVector EndLocation = StartLocation;
-	EndLocation.Z -= 200;
-
-	FHitResult HitResult;
-	GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_WorldDynamic);
-
-	if (HitResult.Actor != nullptr && HitResult.Actor->IsA(AFBlock::StaticClass()))
-		SetNewMoveDestination(HitResult.Actor->GetActorLocation());
 }
 
 void AFPlayerController::ToggleInput(const bool Enable)

@@ -19,19 +19,14 @@ protected:
 	class AFCharacter* MyCharacter;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float DistanceToMove;
-	
+
 	virtual void PlayerTick(float DeltaTime) override;
-	virtual  void BeginPlay() override;
+	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
 	void SetNewMoveDestination(const FVector DestLocation) const;
-	void DoMovement(FVector StartLocation) const;
-	
-	void MoveForward(float Value);
-	void MoveRight(float Value);	
+	void OnDestination();
 
 public:
 	void ToggleInput(bool Enable);
 };
-
-

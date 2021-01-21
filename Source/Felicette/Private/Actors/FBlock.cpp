@@ -27,7 +27,6 @@ AFBlock::AFBlock()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
 void AFBlock::BeginPlay()
 {
 	Super::BeginPlay();
