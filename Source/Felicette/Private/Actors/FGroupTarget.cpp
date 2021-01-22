@@ -8,16 +8,21 @@
 #include "Components/ChildActorComponent.h"
 
 
-AFGroupTarget::AFGroupTarget() 
+AFGroupTarget::AFGroupTarget()
 {
+	PickedType = FPickedTypeEnum::DEFAULT;
+
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
+
+	PickupChild = CreateDefaultSubobject<UChildActorComponent>(TEXT("PickupChild"));
+	PickupChild->SetRelativeLocation(FVector(50,50,0));
+	PickupChild->SetupAttachment(RootComponent);	
 	
-	Weapon = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weapon"));
-	Weapon->SetupAttachment(RootComponent);
-	Weapon->SetChildActorClass(PickupClass);
-	Weapon->CreateChildActor();
-	
+	TargetChild = CreateDefaultSubobject<UChildActorComponent>(TEXT("TargetChild"));
+	TargetChild->SetRelativeLocation(FVector(-50,50,0));
+	TargetChild->SetupAttachment(RootComponent);
+
 	PrimaryActorTick.bCanEverTick = false;
 }
 
@@ -30,54 +35,21 @@ void AFGroupTarget::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	GEngine->AddOnScreenDebugMessage(1,2,FColor::Green,FString::Printf(TEXT("%f - %f - %f "), Transform.GetLocation().X, Transform.GetLocation().Y, Transform.GetLocation().Z));
-	
-	if (PickupClass && PickupTargetClass)
+	if (PickupClass && PickupChild)
 	{
-		FActorSpawnParameters Parameters;
-		Parameters.Instigator = GetInstigator();
-		Parameters.Owner = this;
-		Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		PickupChild->SetChildActorClass(PickupClass);
+		PickupChild->CreateChildActor();
 
-
-		
-			// UChildActorComponent* PickupChild = GetWorld()->SpawnActor<UChildActorComponent>(PickupClass, GetActorLocation() +  FVector(50,50,0), FRotator(0), Parameters);
-			// PickupChild->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
-		//
-		// if (Pickup == nullptr)
-		// {
-		// 	UChildActorComponent* PickupChild = GetWorld()->SpawnActor<UChildActorComponent>(PickupClass, GetActorLocation() +  FVector(50,50,0), FRotator(0), Parameters);
-		// 	PickupChild->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
-		//
-		//
-		// 	
-		// 	
-		// }
-		//
-		// if (Target == nullptr)
-		// {
-		// 	Target = GetWorld()->SpawnActor<AFPickupTarget>(PickupTargetClass, GetActorLocation() + FVector(-50,-50,0), FRotator(0), Parameters);
-		// 	Target->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
-		// 	Target->SetActorLabel("__Target");
-		// }
+		if(AFPickup* Pickup =  Cast<AFPickup>(PickupChild->GetChildActor()))
+			Pickup->SetPickedType(PickedType);
 	}
-}
 
-void AFGroupTarget::PreInitializeComponents()
-{
-	Super::PreInitializeComponents();
+	if (TargetChild && PickupTargetClass)
+	{
+		TargetChild->SetChildActorClass(PickupTargetClass);
+		TargetChild->CreateChildActor();
 
-	
-}
-
-void AFGroupTarget::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	
-}
-
-void AFGroupTarget::PostInitProperties()
-{
-	Super::PostInitProperties();
+		if(AFPickupTarget* Target =  Cast<AFPickupTarget>(TargetChild->GetChildActor()))
+			Target->SetPickedType(PickedType);
+	}	
 }

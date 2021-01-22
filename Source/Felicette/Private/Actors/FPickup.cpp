@@ -42,6 +42,13 @@ void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 }
 
+void AFPickup::SetPickedType(const FPickedTypeEnum PickedTypeEnum)
+{
+	PickedType = PickedTypeEnum;
+
+	//TODO: configure color
+}
+
 FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
 
 void AFPickup::Picked(AFCharacter* Other)

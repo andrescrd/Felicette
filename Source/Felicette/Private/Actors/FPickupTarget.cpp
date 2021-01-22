@@ -46,3 +46,15 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 		PickedActor->Drop();		
 	}
 }
+
+void AFPickupTarget::SetPickedType(const FPickedTypeEnum PickedTypeEnum)
+{
+	PickedType = PickedTypeEnum;
+
+	//TODO: configure color;
+}
+
+FPickedTypeEnum AFPickupTarget::GetPickedType() const
+{
+	return PickedType;
+}
