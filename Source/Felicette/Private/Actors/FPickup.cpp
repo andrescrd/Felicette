@@ -12,6 +12,8 @@
 AFPickup::AFPickup()
 {
 	PickedType = FPickedTypeEnum::DEFAULT;
+	MaterialColorParameterName = FName("Color");
+	MaterialSlotName = FName("Glow");
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetSphereRadius(256);
@@ -42,14 +44,20 @@ void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 }
 
-void AFPickup::SetPickedType(const FPickedTypeEnum PickedTypeEnum)
-{
-	PickedType = PickedTypeEnum;
-
-	//TODO: configure color
-}
+void AFPickup::SetPickedType(const FPickedTypeEnum PickedTypeEnum) { PickedType = PickedTypeEnum; }
 
 FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
+
+void AFPickup::SetColor(const FLinearColor Color) const
+{
+	if(!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
+		return;
+	
+	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);	
+	UMaterialInstanceDynamic* MatInst = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(Index,
+		MeshComponent->GetMaterial(Index));	                                                                                                  
+	MatInst->SetVectorParameterValue(MaterialColorParameterName, Color);
+}
 
 void AFPickup::Picked(AFCharacter* Other)
 {

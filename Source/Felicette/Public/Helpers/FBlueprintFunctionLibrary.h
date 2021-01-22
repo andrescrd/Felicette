@@ -17,5 +17,5 @@ class FELICETTE_API UFBlueprintFunctionLibrary : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	static FColorType GetColorFromDataTableByIndex(class UDataTable *Table, FPickedTypeEnum PickedType);	
+	static FColorType GetColorFromDataTable(class UDataTable *Table, FPickedTypeEnum PickedType);	
 };

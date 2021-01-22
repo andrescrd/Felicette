@@ -6,7 +6,7 @@
 #include "Actors/FPickup.h"
 #include "Actors/FPickupTarget.h"
 #include "Components/ChildActorComponent.h"
-
+#include "Helpers/FBlueprintFunctionLibrary.h"
 
 AFGroupTarget::AFGroupTarget()
 {
@@ -35,13 +35,21 @@ void AFGroupTarget::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
+	if(!DataTable)
+		return;
+
+	const FColorType Color = UFBlueprintFunctionLibrary::GetColorFromDataTable(DataTable, PickedType);
+	
 	if (PickupClass && PickupChild)
 	{
 		PickupChild->SetChildActorClass(PickupClass);
 		PickupChild->CreateChildActor();
 
 		if(AFPickup* Pickup =  Cast<AFPickup>(PickupChild->GetChildActor()))
+		{
 			Pickup->SetPickedType(PickedType);
+			Pickup->SetColor(Color.ColorBase);
+		}
 	}
 
 	if (TargetChild && PickupTargetClass)
@@ -50,6 +58,9 @@ void AFGroupTarget::OnConstruction(const FTransform& Transform)
 		TargetChild->CreateChildActor();
 
 		if(AFPickupTarget* Target =  Cast<AFPickupTarget>(TargetChild->GetChildActor()))
+		{
 			Target->SetPickedType(PickedType);
+			Target->SetColor(Color.ColorBase);
+		}
 	}	
 }

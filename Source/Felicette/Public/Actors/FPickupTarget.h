@@ -23,14 +23,23 @@ protected:
 	class UBoxComponent* BoxComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FPickedTypeEnum PickedType;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
+	FName MaterialSlotName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)	
+	FName MaterialColorParameterName;
+	
 	virtual void BeginPlay() override;
 
 public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	void SetPickedType(FPickedTypeEnum PickedTypeEnum);
+	void SetColor(const FLinearColor Color) const;
+	FPickedTypeEnum GetPickedType() const;
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPickedCollected(AFPickup* OtherActor);
 };

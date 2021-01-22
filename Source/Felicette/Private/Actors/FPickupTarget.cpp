@@ -3,17 +3,17 @@
 
 #include "Actors/FPickupTarget.h"
 
-#include "NiagaraFunctionLibrary.h"
 #include "Components/BoxComponent.h"
 #include "Engine/EngineTypes.h"
 #include "NiagaraComponent.h"
-#include "NiagaraDataInterfaceStaticMesh.h"
 #include "GameMode/FGameMode.h"
 
 // Sets default values
 AFPickupTarget::AFPickupTarget()
 {
 	PickedType = FPickedTypeEnum::DEFAULT;
+	MaterialColorParameterName = FName("Color");
+	MaterialSlotName = FName("Base");
 	
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	BoxComponent->InitBoxExtent(FVector(8, 8, 64));
@@ -41,20 +41,23 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 	{		
 		OnPickedCollected(PickedActor);
 
-		AFGameMode* GM = GetWorld()->GetAuthGameMode<AFGameMode>();
-		GM->AddPickedCollected(1);
+		AFGameMode* Gm = GetWorld()->GetAuthGameMode<AFGameMode>();
+		Gm->AddPickedCollected(1);
 		PickedActor->Drop();		
 	}
 }
 
-void AFPickupTarget::SetPickedType(const FPickedTypeEnum PickedTypeEnum)
-{
-	PickedType = PickedTypeEnum;
+void AFPickupTarget::SetPickedType(const FPickedTypeEnum PickedTypeEnum) { PickedType = PickedTypeEnum; }
 
-	//TODO: configure color;
+void AFPickupTarget::SetColor(const FLinearColor Color) const
+{			
+	if(!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
+		return;
+	
+	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);	
+	UMaterialInstanceDynamic* MatInst = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(Index,
+        MeshComponent->GetMaterial(Index));	                                                                                                  
+	MatInst->SetVectorParameterValue(MaterialColorParameterName, Color);
 }
 
-FPickedTypeEnum AFPickupTarget::GetPickedType() const
-{
-	return PickedType;
-}
+FPickedTypeEnum AFPickupTarget::GetPickedType() const { return PickedType; }
