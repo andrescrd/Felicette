@@ -28,9 +28,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	class UChildActorComponent* TargetChild;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category=Setup)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category=Setup)
 	TSubclassOf<class AFPickup> PickupClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category=Setup)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category=Setup)
 	TSubclassOf<class AFPickupTarget> PickupTargetClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category=Setup)

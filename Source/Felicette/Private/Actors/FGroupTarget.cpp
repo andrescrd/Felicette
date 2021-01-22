@@ -10,17 +10,17 @@
 
 AFGroupTarget::AFGroupTarget()
 {
-	PickedType = FPickedTypeEnum::DEFAULT;
+	PickedType = FPickedTypeEnum::Default;
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
 
 	PickupChild = CreateDefaultSubobject<UChildActorComponent>(TEXT("PickupChild"));
-	PickupChild->SetRelativeLocation(FVector(50,50,0));
+	PickupChild->SetRelativeLocation(FVector(150,150,0));
 	PickupChild->SetupAttachment(RootComponent);	
 	
 	TargetChild = CreateDefaultSubobject<UChildActorComponent>(TEXT("TargetChild"));
-	TargetChild->SetRelativeLocation(FVector(-50,50,0));
+	TargetChild->SetRelativeLocation(FVector(0));
 	TargetChild->SetupAttachment(RootComponent);
 
 	PrimaryActorTick.bCanEverTick = false;

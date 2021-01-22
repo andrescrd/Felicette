@@ -11,7 +11,7 @@
 // Sets default values
 AFPickupTarget::AFPickupTarget()
 {
-	PickedType = FPickedTypeEnum::DEFAULT;
+	PickedType = FPickedTypeEnum::Default;
 	MaterialColorParameterName = FName("Color");
 	MaterialSlotName = FName("Base");
 	

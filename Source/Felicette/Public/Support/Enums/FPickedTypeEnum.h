@@ -11,8 +11,21 @@
 UENUM(BlueprintType)
 enum class FPickedTypeEnum : uint8
 {
-	DEFAULT UMETA(DisplayName ="Default"),
-	RED  UMETA(DisplayName = "Red"),	
-	BLUE  UMETA(DisplayName = "Blue"),	
-	GREEN  UMETA(DisplayName = "Green"),	
+	Default,
+	Red,
+	Blue,
+	Green,
+	White,
+	Silver,
+	Gray,
+	Black,
+	Maroon,
+	Yellow,
+	Olive,
+	Lime,
+	Aqua,
+	Teal,
+	Navy,
+	Fuchsia,
+	Purple
 };

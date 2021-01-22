@@ -23,21 +23,22 @@ public:
 	AFPickup();
 
 protected:
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMeshComponent* MeshComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComponent;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFRotatorComponent* RotatorComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFMovableComponent* MovableComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
-	FPickedTypeEnum PickedType;	
+	FPickedTypeEnum PickedType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FName MaterialSlotName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FName MaterialColorParameterName;
 
 	virtual void BeginPlay() override;
@@ -46,8 +47,12 @@ public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	void SetPickedType(FPickedTypeEnum PickedTypeEnum);
-	FPickedTypeEnum GetPickedType() const;
-	void SetColor(  FLinearColor Color) const;
+	void SetColor(const FLinearColor Color) const;
 	void Picked(class AFCharacter* Other);
 	void Drop();
+
+	UFUNCTION(BlueprintCallable)
+	FPickedTypeEnum GetPickedType() const;
+	UFUNCTION(BlueprintCallable)
+	FLinearColor GetPrimaryColor() const;
 };

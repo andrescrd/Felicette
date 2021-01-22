@@ -11,7 +11,7 @@
 // Sets default values
 AFPickup::AFPickup()
 {
-	PickedType = FPickedTypeEnum::DEFAULT;
+	PickedType = FPickedTypeEnum::Default;
 	MaterialColorParameterName = FName("Color");
 	MaterialSlotName = FName("Glow");
 
@@ -50,13 +50,28 @@ FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
 
 void AFPickup::SetColor(const FLinearColor Color) const
 {
-	if(!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
+	if (!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
 		return;
-	
-	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);	
+
+	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);
 	UMaterialInstanceDynamic* MatInst = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(Index,
-		MeshComponent->GetMaterial(Index));	                                                                                                  
+	                                                                                                   MeshComponent->GetMaterial(Index));
 	MatInst->SetVectorParameterValue(MaterialColorParameterName, Color);
+}
+
+FLinearColor AFPickup::GetPrimaryColor() const
+{
+	FLinearColor Result;
+
+	if (!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
+		return Result;
+
+	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);
+	UMaterialInterface* MatInst = MeshComponent->GetMaterial(Index);
+
+	MatInst->GetVectorParameterValue(MaterialColorParameterName, Result);
+
+	return Result;
 }
 
 void AFPickup::Picked(AFCharacter* Other)
