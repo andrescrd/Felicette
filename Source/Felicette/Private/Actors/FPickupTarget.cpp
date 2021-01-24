@@ -6,7 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Engine/EngineTypes.h"
 #include "NiagaraComponent.h"
-#include "GameMode/FGameMode.h"
+#include "World/GameModes/FGameMode.h"
 
 // Sets default values
 AFPickupTarget::AFPickupTarget()

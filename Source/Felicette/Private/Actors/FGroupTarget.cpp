@@ -6,7 +6,7 @@
 #include "Actors/FPickup.h"
 #include "Actors/FPickupTarget.h"
 #include "Components/ChildActorComponent.h"
-#include "Helpers/FBlueprintFunctionLibrary.h"
+#include "Support/Helpers/FBlueprintFunctionLibrary.h"
 
 AFGroupTarget::AFGroupTarget()
 {
@@ -16,9 +16,9 @@ AFGroupTarget::AFGroupTarget()
 	RootComponent = Root;
 
 	PickupChild = CreateDefaultSubobject<UChildActorComponent>(TEXT("PickupChild"));
-	PickupChild->SetRelativeLocation(FVector(150,150,0));
-	PickupChild->SetupAttachment(RootComponent);	
-	
+	PickupChild->SetRelativeLocation(FVector(150, 150, 0));
+	PickupChild->SetupAttachment(RootComponent);
+
 	TargetChild = CreateDefaultSubobject<UChildActorComponent>(TEXT("TargetChild"));
 	TargetChild->SetRelativeLocation(FVector(0));
 	TargetChild->SetupAttachment(RootComponent);
@@ -35,17 +35,17 @@ void AFGroupTarget::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	if(!DataTable)
+	if (!DataTable)
 		return;
 
 	const FColorType Color = UFBlueprintFunctionLibrary::GetColorFromDataTable(DataTable, PickedType);
-	
+
 	if (PickupClass && PickupChild)
 	{
 		PickupChild->SetChildActorClass(PickupClass);
 		PickupChild->CreateChildActor();
 
-		if(AFPickup* Pickup =  Cast<AFPickup>(PickupChild->GetChildActor()))
+		if (AFPickup* Pickup = Cast<AFPickup>(PickupChild->GetChildActor()))
 		{
 			Pickup->SetPickedType(PickedType);
 			Pickup->SetColor(Color.ColorBase);
@@ -57,10 +57,10 @@ void AFGroupTarget::OnConstruction(const FTransform& Transform)
 		TargetChild->SetChildActorClass(PickupTargetClass);
 		TargetChild->CreateChildActor();
 
-		if(AFPickupTarget* Target =  Cast<AFPickupTarget>(TargetChild->GetChildActor()))
+		if (AFPickupTarget* Target = Cast<AFPickupTarget>(TargetChild->GetChildActor()))
 		{
 			Target->SetPickedType(PickedType);
 			Target->SetColor(Color.ColorBase);
 		}
-	}	
+	}
 }

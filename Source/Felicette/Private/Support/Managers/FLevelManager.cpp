@@ -1,10 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Managers/FLevelManager.h"
+#include "Support/Managers/FLevelManager.h"
+
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
+#include "Support/Structs/FLevelSetup.h"
 
 TArray<FLevelSetup> AFLevelManager::GetGameplayLevels() const { return GameplayLevels; }
 

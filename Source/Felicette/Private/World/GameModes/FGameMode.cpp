@@ -1,12 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "GameMode/FGameMode.h"
+#include "World/GameModes/FGameMode.h"
 
 #include "Actors/FPickup.h"
 #include "Actors/FTeleport.h"
-#include "GameStates/FGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/FPlayerController.h"
+#include "World/GameStates/FGameState.h"
 
 AFGameMode::AFGameMode()
 {
