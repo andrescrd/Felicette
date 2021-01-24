@@ -9,21 +9,15 @@ void UFGameInstance::Init()
 {
 	Super::Init();
 
-	if (LevelManagerClass)
-		LevelManagerInstance = NewObject<AFLevelManager>(this, LevelManagerClass, TEXT("LevelManager"));
+	DataManagerInstance = NewObject<AFDataManager>(this, FName("DataManager"));
+	LevelManagerInstance = NewObject<AFLevelManager>(this, LevelManagerClass, TEXT("LevelManager"));
 
-	if (LevelManagerInstance)
-	{
-		if (GetDataManager()->GetLevels().Num() > 0)
-			LevelManagerInstance->SetGameplayLevels(GetDataManager()->GetLevels());
-	}
+	if (LevelManagerInstance && DataManagerInstance->GetLevels().Num() > 0)
+		LevelManagerInstance->SetGameplayLevels(GetDataManager()->GetLevels());
 }
 
 void UFGameInstance::Shutdown() { GetDataManager()->SaveLevels(LevelManagerInstance->GetGameplayLevels()); }
 
 class AFLevelManager* UFGameInstance::GetLevelManager() const { return IsValid(LevelManagerInstance) ? LevelManagerInstance : nullptr; }
 
-class AFDataManager* UFGameInstance::GetDataManager()
-{
-	return IsValid(DataManagerInstance) ? DataManagerInstance : DataManagerInstance = NewObject<AFDataManager>(this, FName("DataManager"));
-}
+class AFDataManager* UFGameInstance::GetDataManager() const { return IsValid(DataManagerInstance) ? DataManagerInstance : nullptr; }

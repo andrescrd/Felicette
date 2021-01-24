@@ -36,5 +36,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	class AFLevelManager* GetLevelManager() const;
 	UFUNCTION(BlueprintCallable)
-	class AFDataManager* GetDataManager();
+	class AFDataManager* GetDataManager() const;
 };
