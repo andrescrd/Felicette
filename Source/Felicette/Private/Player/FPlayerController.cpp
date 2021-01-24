@@ -55,6 +55,9 @@ void AFPlayerController::OnDestination()
 	{
 		AFBlock* Block = Cast<AFBlock>(HitResult.GetActor());
 
+		if(!Block->IsValid())
+			return;;
+
 		FVector BlockLocation = Block->GetActorLocation();
 		const FVector CharacterLocation = MyCharacter->GetActorLocation();
 

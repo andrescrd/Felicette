@@ -43,7 +43,7 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		AFGameMode* Gm = GetWorld()->GetAuthGameMode<AFGameMode>();
 		Gm->AddPickedCollected(1);
-		PickedActor->Drop();		
+		PickedActor->Dropped();		
 	}
 }
 

@@ -13,7 +13,7 @@ AFPickup::AFPickup()
 {
 	PickedType = FPickedTypeEnum::Default;
 	MaterialColorParameterName = FName("Color");
-	MaterialSlotName = FName("Glow");
+	MaterialSlotNameGlow = FName("Glow");
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetSphereRadius(256);
@@ -50,10 +50,10 @@ FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
 
 void AFPickup::SetColor(const FLinearColor Color) const
 {
-	if (!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
+	if (!MeshComponent->IsMaterialSlotNameValid(MaterialSlotNameGlow))
 		return;
 
-	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);
+	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotNameGlow);
 	UMaterialInstanceDynamic* MatInst = MeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(Index,
 	                                                                                                   MeshComponent->GetMaterial(Index));
 	MatInst->SetVectorParameterValue(MaterialColorParameterName, Color);
@@ -63,10 +63,10 @@ FLinearColor AFPickup::GetPrimaryColor() const
 {
 	FLinearColor Result;
 
-	if (!MeshComponent->IsMaterialSlotNameValid(MaterialSlotName))
+	if (!MeshComponent->IsMaterialSlotNameValid(MaterialSlotNameGlow))
 		return Result;
 
-	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotName);
+	const int32 Index = MeshComponent->GetMaterialIndex(MaterialSlotNameGlow);
 	UMaterialInterface* MatInst = MeshComponent->GetMaterial(Index);
 
 	MatInst->GetVectorParameterValue(MaterialColorParameterName, Result);
@@ -84,7 +84,7 @@ void AFPickup::Picked(AFCharacter* Other)
 	AttachToComponent(Other->GetMesh(), Rules, Other->GetPickerSocketName());
 }
 
-void AFPickup::Drop()
+void AFPickup::Dropped()
 {
 	const FDetachmentTransformRules Rules = FDetachmentTransformRules(EDetachmentRule::KeepWorld,
 	                                                                  EDetachmentRule::KeepRelative,

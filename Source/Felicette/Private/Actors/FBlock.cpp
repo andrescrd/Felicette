@@ -31,12 +31,13 @@ void AFBlock::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupTimeline();
-	MaterialPrimary = MeshComponent->GetMaterial(0);
+	const int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+	MaterialPrimary = MeshComponent->GetMaterial(MaterilaIndex);
 }
 
 void AFBlock::SetupTimeline()
 {
-	if (!IsValid(Curve))
+	if (!Curve)
 		return;
 
 	FOnTimelineFloat TimelineCallback;
@@ -64,8 +65,13 @@ void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 		TimelineComponent->Play();
 		bActive = false;
 
+		int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
 		if (MaterialSecondary)
-			MeshComponent->SetMaterial(0, MaterialSecondary);
+			MeshComponent->SetMaterial(MaterilaIndex, MaterialSecondary);
+
+		MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotNameGlow);
+		if (MaterialSecondary)
+			MeshComponent->SetMaterial(MaterilaIndex, MaterialSecondary);
 	}
 }
 
@@ -73,7 +79,7 @@ void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 }
 
-bool AFBlock::IsValidLocation(const FVector Vector)
+bool AFBlock::IsValid()
 {
 	// TODO: check if location is valid to move
 	return true;
@@ -83,9 +89,10 @@ bool AFBlock::IsActive() const { return bActive; }
 
 void AFBlock::NotifyActorBeginCursorOver()
 {
-	if (IsValidLocation(GetActorLocation()) && !bIsHighlighted && MaterialHeiglight && bActive)
+	if (IsValid() && !bIsHighlighted && MaterialHeiglight && bActive)
 	{
-		MeshComponent->SetMaterial(0, MaterialHeiglight);
+		const int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+		MeshComponent->SetMaterial(MaterilaIndex, MaterialHeiglight);
 		bIsHighlighted = true;
 	}
 }
@@ -94,7 +101,8 @@ void AFBlock::NotifyActorEndCursorOver()
 {
 	if (bIsHighlighted && MaterialPrimary && bActive)
 	{
-		MeshComponent->SetMaterial(0, MaterialPrimary);
+		const int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+		MeshComponent->SetMaterial(MaterilaIndex, MaterialPrimary);
 		bIsHighlighted = false;
 	}
 }

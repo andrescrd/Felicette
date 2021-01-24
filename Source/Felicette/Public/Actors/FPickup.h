@@ -37,7 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FPickedTypeEnum PickedType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
-	FName MaterialSlotName;
+	FName MaterialSlotNameGlow;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FName MaterialColorParameterName;
 
@@ -49,7 +49,7 @@ public:
 	void SetPickedType(FPickedTypeEnum PickedTypeEnum);
 	void SetColor(const FLinearColor Color) const;
 	void Picked(class AFCharacter* Other);
-	void Drop();
+	void Dropped();
 
 	UFUNCTION(BlueprintCallable)
 	FPickedTypeEnum GetPickedType() const;

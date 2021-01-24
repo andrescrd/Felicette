@@ -27,22 +27,26 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	class UMaterialInterface* MaterialPrimary;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	class UMaterialInterface* MaterialSecondary;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	class UMaterialInterface* MaterialHeiglight;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)	
+	FName MaterilaSlotName;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)	
+	FName MaterilaSlotNameGlow;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Setup)
 	class UTimelineComponent* TimelineComponent;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	class UCurveFloat* Curve;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Setup)
 	bool bActive;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	float OffsetZ;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	float TimelineTime;
-
+	
 	virtual void BeginPlay() override;
 	void SetupTimeline();
 
@@ -56,6 +60,6 @@ public:
 	virtual void NotifyActorBeginCursorOver() override;
 	virtual void NotifyActorEndCursorOver() override;
 
-	bool IsValidLocation(const FVector Vector);
+	bool IsValid();
 	bool IsActive() const;
 };

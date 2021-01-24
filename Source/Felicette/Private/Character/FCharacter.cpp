@@ -3,7 +3,6 @@
 #include "Character/FCharacter.h"
 
 #include "AIController.h"
-#include "DrawDebugHelpers.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -22,11 +21,6 @@ AFCharacter::AFCharacter()
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
-}
-
-void AFCharacter::Tick(float DeltaSeconds)
-{
-    Super::Tick(DeltaSeconds);
 }
 
 FName AFCharacter::GetPickerSocketName() const { return PickerSocketName; }
@@ -48,8 +42,6 @@ void AFCharacter::SetNewMoveDestination(FVector DestLocation, const bool KeepAxi
 		DestLocation.Z = NewZ;
 	}
 	
-	// DrawDebugSphere(GetWorld(), DestLocation, 50, 8, FColor::Red, true, 3, 0, 3);
-
 	if (AAIController* AI = Cast<AAIController>(GetController()))
 		AI->MoveToLocation(DestLocation, 5, false, false);
 }
