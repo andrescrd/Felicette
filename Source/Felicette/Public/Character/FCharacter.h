@@ -19,8 +19,11 @@ protected:
 	FName PickerSocketName;
 
 public:
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
 	FName GetPickerSocketName() const;	
 	bool IsMoving() const;
 	void SetNewMoveDestination(FVector DestLocation, bool KeepAxisZValue) const;
+	bool HasItemPicked() const;
 };
 

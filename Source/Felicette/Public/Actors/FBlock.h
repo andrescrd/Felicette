@@ -60,6 +60,7 @@ public:
 	virtual void NotifyActorBeginCursorOver() override;
 	virtual void NotifyActorEndCursorOver() override;
 
+	bool HasItemOverlapped() const;
 	bool IsValid();
 	bool IsActive() const;
 };
