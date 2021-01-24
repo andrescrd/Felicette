@@ -37,11 +37,11 @@ void AFPickup::BeginPlay()
 
 void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	if (AFCharacter* Character = Cast<AFCharacter>(OtherActor))
-	{
-		MovableComponent->Deactivate();
-		Picked(Character);
-	}
+	// if (AFCharacter* Character = Cast<AFCharacter>(OtherActor))
+	// {
+	// 	MovableComponent->Deactivate();
+	// 	Picked(Character);
+	// }
 }
 
 void AFPickup::SetPickedType(const FPickedTypeEnum PickedTypeEnum) { PickedType = PickedTypeEnum; }
@@ -76,6 +76,7 @@ FLinearColor AFPickup::GetPrimaryColor() const
 
 void AFPickup::Picked(AFCharacter* Other)
 {
+	MovableComponent->Deactivate();
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	const FAttachmentTransformRules Rules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget,

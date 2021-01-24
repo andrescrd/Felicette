@@ -3,6 +3,7 @@
 #include "Character/FCharacter.h"
 
 #include "AIController.h"
+#include "Actors/FPickup.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -21,6 +22,12 @@ AFCharacter::AFCharacter()
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+}
+
+void AFCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	if (OtherActor->IsA(AFPickup::StaticClass()))
+		Cast<AFPickup>(OtherActor)->Picked(this);
 }
 
 FName AFCharacter::GetPickerSocketName() const { return PickerSocketName; }
@@ -44,4 +51,11 @@ void AFCharacter::SetNewMoveDestination(FVector DestLocation, const bool KeepAxi
 	
 	if (AAIController* AI = Cast<AAIController>(GetController()))
 		AI->MoveToLocation(DestLocation, 5, false, false);
+}
+
+bool AFCharacter::HasItemPicked() const
+{
+	TArray<AActor*> Actors;
+	GetAttachedActors(Actors);
+	return Actors.FindItemByClass<AFPickup>();
 }

@@ -55,7 +55,7 @@ void AFPlayerController::OnDestination()
 	{
 		AFBlock* Block = Cast<AFBlock>(HitResult.GetActor());
 
-		if(!Block->IsValid())
+		if(!Block->IsValid() || (Block->HasItemOverlapped() && MyCharacter->HasItemPicked()))
 			return;;
 
 		FVector BlockLocation = Block->GetActorLocation();
@@ -64,7 +64,7 @@ void AFPlayerController::OnDestination()
 		BlockLocation.Z = CharacterLocation.Z;		
 		const float Distance = (BlockLocation - CharacterLocation).Size();
 
-		DrawDebugLine(GetWorld(),CharacterLocation, BlockLocation,FColor::Green, true,3,0,5);			
+		// DrawDebugLine(GetWorld(),CharacterLocation, BlockLocation,FColor::Green, true,3,0,5);			
 		GEngine->AddOnScreenDebugMessage(1,2,FColor::Green,FString::Printf(TEXT("Distance is %f and max is  %f" ),Distance,DistanceToMove));
 		
 		if(Distance > DistanceToMove)

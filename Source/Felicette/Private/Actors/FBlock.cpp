@@ -4,6 +4,8 @@
 #include "Felicette/Public/Actors/FBlock.h"
 
 
+
+#include "Actors/FPickup.h"
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Character.h"
@@ -31,8 +33,10 @@ void AFBlock::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupTimeline();
-	const int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
-	MaterialPrimary = MeshComponent->GetMaterial(MaterilaIndex);
+
+	//Setup primary material
+	const int32 MaterialIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+	MaterialPrimary = MeshComponent->GetMaterial(MaterialIndex);
 }
 
 void AFBlock::SetupTimeline()
@@ -65,13 +69,13 @@ void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 		TimelineComponent->Play();
 		bActive = false;
 
-		int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+		int32 MaterialIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
 		if (MaterialSecondary)
-			MeshComponent->SetMaterial(MaterilaIndex, MaterialSecondary);
+			MeshComponent->SetMaterial(MaterialIndex, MaterialSecondary);
 
-		MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotNameGlow);
+		MaterialIndex = MeshComponent->GetMaterialIndex(MaterilaSlotNameGlow);
 		if (MaterialSecondary)
-			MeshComponent->SetMaterial(MaterilaIndex, MaterialSecondary);
+			MeshComponent->SetMaterial(MaterialIndex, MaterialSecondary);
 	}
 }
 
@@ -91,8 +95,8 @@ void AFBlock::NotifyActorBeginCursorOver()
 {
 	if (IsValid() && !bIsHighlighted && MaterialHeiglight && bActive)
 	{
-		const int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
-		MeshComponent->SetMaterial(MaterilaIndex, MaterialHeiglight);
+		const int32 MaterialIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+		MeshComponent->SetMaterial(MaterialIndex, MaterialHeiglight);
 		bIsHighlighted = true;
 	}
 }
@@ -101,8 +105,16 @@ void AFBlock::NotifyActorEndCursorOver()
 {
 	if (bIsHighlighted && MaterialPrimary && bActive)
 	{
-		const int32 MaterilaIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
-		MeshComponent->SetMaterial(MaterilaIndex, MaterialPrimary);
+		const int32 MaterialIndex = MeshComponent->GetMaterialIndex(MaterilaSlotName);
+		MeshComponent->SetMaterial(MaterialIndex, MaterialPrimary);
 		bIsHighlighted = false;
 	}
+}
+
+bool AFBlock::HasItemOverlapped() const
+{
+	TArray<AActor*> OverlappingActors;
+	BoxComponent->GetOverlappingActors(OverlappingActors, AFPickup::StaticClass());
+
+	return OverlappingActors.Num() > 0;
 }
