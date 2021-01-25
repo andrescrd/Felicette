@@ -3,12 +3,31 @@
 
 #include "Support/Managers/FLevelManager.h"
 
+#include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "Support/Structs/FLevelSetup.h"
 
 TArray<FLevelSetup> AFLevelManager::GetGameplayLevels() const { return GameplayLevels; }
+
+void AFLevelManager::LoadMap(UWorld* World, const FName MapName)
+{
+	if (LoadingWidgetClass)
+	{
+		auto CurrentWidget = CreateWidget<UUserWidget>(World, LoadingWidgetClass);
+
+		if (CurrentWidget != nullptr)
+			CurrentWidget->AddToViewport();
+
+		FTimerHandle UniqueHandle;
+		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::OnMapLoaded, World, MapName);
+		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 2.f, false);
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+void AFLevelManager::OnMapLoaded(UWorld* World, const FName MapName) { World->ServerTravel(MapName.ToString()); }
 
 void AFLevelManager::SetGameplayLevels(const TArray<FLevelSetup> NewLevels) { GameplayLevels = NewLevels; }
 
@@ -34,13 +53,20 @@ void AFLevelManager::LoadNextGameplayLevel(UObject* Context)
 	const FLevelSetup NextGameplayLevel = GetNextGameplayLevel(Context);
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(Context);
 
-	for (int32 Index = 0; Index < GameplayLevels.Num(); Index++)
+	if (NextGameplayLevel.LevelName == Menu.LevelName)
 	{
-		if (NextGameplayLevel.LevelName.IsEqual(GameplayLevels[Index].LevelName))
+		LoadMap(World, Menu.LevelName);
+	}
+	else
+	{
+		for (int32 Index = 0; Index < GameplayLevels.Num(); Index++)
 		{
-			GameplayLevels[Index].State = FLevelStateEnum::Unlocked;
-			UGameplayStatics::OpenLevel(World, NextGameplayLevel.LevelName);
-			break;
+			if (NextGameplayLevel.LevelName.IsEqual(GameplayLevels[Index].LevelName))
+			{
+				GameplayLevels[Index].State = FLevelStateEnum::Unlocked;
+				LoadMap(World, NextGameplayLevel.LevelName);
+				break;
+			}
 		}
 	}
 }
@@ -49,7 +75,7 @@ void AFLevelManager::LoadLevel(UObject* Context, const FName LevelNameToLoad)
 {
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(Context);
 	UE_LOG(LogTemp, Warning, TEXT("Level to load %s"), *LevelNameToLoad.ToString());
-	UGameplayStatics::OpenLevel(World, LevelNameToLoad, true);
+	LoadMap(World, LevelNameToLoad);
 }
 
 FName AFLevelManager::CleanLevelString(UObject* Context)

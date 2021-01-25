@@ -18,6 +18,18 @@ void UFGameInstance::Init()
 
 void UFGameInstance::Shutdown() { GetDataManager()->SaveLevels(LevelManagerInstance->GetGameplayLevels()); }
 
+void UFGameInstance::LoadFirstLevel(UObject* Context) const
+{
+	TArray<FLevelSetup> Levels = GetLevelManager()->GetGameplayLevels();
+
+	if(Levels.Num() > 0)
+		GetLevelManager()->LoadLevel(Context, Levels[0].LevelName);
+
+	//TODO: print warning not level setup
+}
+
+void UFGameInstance::LoadNextGameplayLevel(UObject* Context) const { GetLevelManager()->LoadNextGameplayLevel(Context); }
+
 class AFLevelManager* UFGameInstance::GetLevelManager() const { return IsValid(LevelManagerInstance) ? LevelManagerInstance : nullptr; }
 
 class AFDataManager* UFGameInstance::GetDataManager() const { return IsValid(DataManagerInstance) ? DataManagerInstance : nullptr; }

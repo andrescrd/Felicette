@@ -37,4 +37,9 @@ public:
 	class AFLevelManager* GetLevelManager() const;
 	UFUNCTION(BlueprintCallable)
 	class AFDataManager* GetDataManager() const;
+
+	UFUNCTION(BlueprintCallable)
+	void LoadFirstLevel(UObject* Context) const;
+	UFUNCTION(BlueprintCallable)
+	void LoadNextGameplayLevel(UObject* Context) const;
 };

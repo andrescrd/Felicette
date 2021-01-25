@@ -6,6 +6,7 @@
 #include "Actors/FTeleport.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/FPlayerController.h"
+#include "World/GameInstances/FGameInstance.h"
 #include "World/GameStates/FGameState.h"
 
 AFGameMode::AFGameMode()
@@ -67,7 +68,11 @@ void AFGameMode::Playing() const { TogglePlayerInput(true); }
 
 void AFGameMode::Complete() const { Teleport->SetIsActivated(true); }
 
-void AFGameMode::Finished() const { TogglePlayerInput(false); }
+void AFGameMode::Finished() const
+{
+	TogglePlayerInput(false);	
+	Cast<UFGameInstance>(GetGameInstance())->LoadNextGameplayLevel(GetWorld());
+}
 
 void AFGameMode::TogglePlayerInput(const bool Enable) const
 {

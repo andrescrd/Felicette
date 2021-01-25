@@ -16,13 +16,19 @@ private:
 	FName CleanLevelString(class UObject* Context);
 
 protected:
-	UPROPERTY(VisibleAnywhere)
 	FLevelSetup CurrentLevel;
+
 	UPROPERTY(EditDefaultsOnly)
 	FLevelSetup Menu;
 	UPROPERTY(EditDefaultsOnly)
+	FLevelSetup Loading;	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget>  LoadingWidgetClass;
+	UPROPERTY(EditDefaultsOnly)
 	TArray<FLevelSetup> GameplayLevels;
-
+	
+	void LoadMap(class UWorld* World, FName MapName);
+	void OnMapLoaded(class UWorld* World, FName MapName);
 public:
 	void SetGameplayLevels(TArray<FLevelSetup> NewLevels);
 
