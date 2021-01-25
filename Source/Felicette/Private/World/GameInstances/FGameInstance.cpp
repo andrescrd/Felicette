@@ -18,7 +18,7 @@ void UFGameInstance::Init()
 
 void UFGameInstance::Shutdown() { GetDataManager()->SaveLevels(LevelManagerInstance->GetGameplayLevels()); }
 
-void UFGameInstance::LoadFirstLevel(UObject* Context) const
+void UFGameInstance::LoadGameplayFirstLevel(UObject* Context) const
 {
 	TArray<FLevelSetup> Levels = GetLevelManager()->GetGameplayLevels();
 
@@ -27,6 +27,8 @@ void UFGameInstance::LoadFirstLevel(UObject* Context) const
 
 	//TODO: print warning not level setup
 }
+
+void UFGameInstance::LoadMainMenu(UObject* Context) const { GetLevelManager()->LoadMenuLevel(Context); }
 
 void UFGameInstance::LoadNextGameplayLevel(UObject* Context) const { GetLevelManager()->LoadNextGameplayLevel(Context); }
 

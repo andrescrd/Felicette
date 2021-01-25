@@ -11,24 +11,6 @@
 
 TArray<FLevelSetup> AFLevelManager::GetGameplayLevels() const { return GameplayLevels; }
 
-void AFLevelManager::LoadMap(UWorld* World, const FName MapName)
-{
-	if (LoadingWidgetClass)
-	{
-		auto CurrentWidget = CreateWidget<UUserWidget>(World, LoadingWidgetClass);
-
-		if (CurrentWidget != nullptr)
-			CurrentWidget->AddToViewport();
-
-		FTimerHandle UniqueHandle;
-		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::OnMapLoaded, World, MapName);
-		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 2.f, false);
-	}
-}
-
-// ReSharper disable once CppMemberFunctionMayBeStatic
-void AFLevelManager::OnMapLoaded(UWorld* World, const FName MapName) { World->ServerTravel(MapName.ToString()); }
-
 void AFLevelManager::SetGameplayLevels(const TArray<FLevelSetup> NewLevels) { GameplayLevels = NewLevels; }
 
 FLevelSetup AFLevelManager::GetNextGameplayLevel(UObject* Context)
@@ -55,7 +37,7 @@ void AFLevelManager::LoadNextGameplayLevel(UObject* Context)
 
 	if (NextGameplayLevel.LevelName == Menu.LevelName)
 	{
-		LoadMap(World, Menu.LevelName);
+		LoadMenuLevel(Context);
 	}
 	else
 	{
@@ -71,12 +53,33 @@ void AFLevelManager::LoadNextGameplayLevel(UObject* Context)
 	}
 }
 
+void AFLevelManager::LoadMenuLevel(UObject* Context) { LoadLevel(Context, Menu.LevelName); }
+
 void AFLevelManager::LoadLevel(UObject* Context, const FName LevelNameToLoad)
 {
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(Context);
 	UE_LOG(LogTemp, Warning, TEXT("Level to load %s"), *LevelNameToLoad.ToString());
 	LoadMap(World, LevelNameToLoad);
 }
+
+
+void AFLevelManager::LoadMap(UWorld* World, const FName MapName)
+{
+	if (LoadingWidgetClass)
+	{
+		auto CurrentWidget = CreateWidget<UUserWidget>(World, LoadingWidgetClass);
+
+		if (CurrentWidget != nullptr)
+			CurrentWidget->AddToViewport();
+
+		FTimerHandle UniqueHandle;
+		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::OnMapLoaded, World, MapName);
+		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 2.f, false);
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+void AFLevelManager::OnMapLoaded(UWorld* World, const FName MapName) { World->ServerTravel(MapName.ToString()); }
 
 FName AFLevelManager::CleanLevelString(UObject* Context)
 {

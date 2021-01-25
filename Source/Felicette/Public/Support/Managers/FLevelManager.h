@@ -40,4 +40,6 @@ public:
 	FLevelSetup GetNextGameplayLevel(class UObject* Context);
 	UFUNCTION(BlueprintCallable)
 	void LoadNextGameplayLevel(class UObject* Context);
+	UFUNCTION(BlueprintCallable)
+	void LoadMenuLevel(class UObject* Context);
 };
