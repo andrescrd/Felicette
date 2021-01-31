@@ -13,7 +13,9 @@ void UFGameInstance::Init()
 	LevelManagerInstance = NewObject<AFLevelManager>(this, LevelManagerClass, TEXT("LevelManager"));
 
 	if (LevelManagerInstance && DataManagerInstance->GetLevels().Num() > 0)
-		LevelManagerInstance->SetGameplayLevels(GetDataManager()->GetLevels());
+		LevelManagerInstance->SetGameplayLevels(
+			LevelManagerInstance->GetGameplayLevels().Num() > GetDataManager()->GetLevels().Num() ?
+			LevelManagerInstance->GetGameplayLevels() : GetDataManager()->GetLevels());
 }
 
 void UFGameInstance::Shutdown() { GetDataManager()->SaveLevels(LevelManagerInstance->GetGameplayLevels()); }
@@ -22,7 +24,7 @@ void UFGameInstance::LoadGameplayFirstLevel(UObject* Context) const
 {
 	TArray<FLevelSetup> Levels = GetLevelManager()->GetGameplayLevels();
 
-	if(Levels.Num() > 0)
+	if (Levels.Num() > 0)
 		GetLevelManager()->LoadLevel(Context, Levels[0].LevelName);
 
 	//TODO: print warning not level setup

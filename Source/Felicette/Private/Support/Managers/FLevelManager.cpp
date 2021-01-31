@@ -74,7 +74,7 @@ void AFLevelManager::LoadMap(UWorld* World, const FName MapName)
 
 		FTimerHandle UniqueHandle;
 		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::OnMapLoaded, World, MapName);
-		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 2.f, false);
+		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, LoaderTime, false);
 	}
 }
 

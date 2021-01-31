@@ -26,7 +26,9 @@ protected:
 	TSubclassOf<UUserWidget>  LoadingWidgetClass;
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FLevelSetup> GameplayLevels;
-	
+	UPROPERTY(EditDefaultsOnly)
+	float LoaderTime;
+
 	void LoadMap(class UWorld* World, FName MapName);
 	void OnMapLoaded(class UWorld* World, FName MapName);
 public:
