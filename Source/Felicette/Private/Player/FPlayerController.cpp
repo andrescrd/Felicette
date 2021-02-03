@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "AIController.h"
 #include "Kismet/GameplayStatics.h"
+#include "World/GameInstances/FGameInstance.h"
 
 AFPlayerController::AFPlayerController()
 {

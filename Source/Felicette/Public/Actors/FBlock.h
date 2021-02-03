@@ -46,6 +46,9 @@ protected:
 	float OffsetZ;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	float TimelineTime;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
+	class USoundBase* ActiveSound;
 	
 	virtual void BeginPlay() override;
 	void SetupTimeline();

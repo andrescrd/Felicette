@@ -9,6 +9,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFBlock::AFBlock()
@@ -76,6 +77,9 @@ void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 		MaterialIndex = MeshComponent->GetMaterialIndex(MaterilaSlotNameGlow);
 		if (MaterialSecondary)
 			MeshComponent->SetMaterial(MaterialIndex, MaterialSecondary);
+
+		if(ActiveSound)
+			UGameplayStatics::PlaySound2D(this, ActiveSound);
 	}
 }
 

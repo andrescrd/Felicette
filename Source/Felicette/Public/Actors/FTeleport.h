@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsActivated;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
+	class USoundBase* PickedSound;
+
 	virtual void BeginPlay() override;
 
 public:

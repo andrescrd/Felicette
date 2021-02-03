@@ -2,6 +2,8 @@
 
 #include "World/GameInstances/FGameInstance.h"
 
+
+#include "Kismet/GameplayStatics.h"
 #include "Support/Managers/FLevelManager.h"
 #include "Support/Managers/FDataManager.h"
 
@@ -53,6 +55,12 @@ void UFGameInstance::LoadLastLevel(UObject* Context) const
 }
 
 void UFGameInstance::LoadMainMenu(UObject* Context) const { GetLevelManager()->LoadMenuLevel(Context); }
+
+void UFGameInstance::Restart(UObject* Context) const
+{
+	FString LevelName = UGameplayStatics::GetCurrentLevelName(Context);
+	GetLevelManager()->LoadLevel(Context, FName(LevelName));
+}
 
 void UFGameInstance::LoadNextGameplayLevel(UObject* Context) const { GetLevelManager()->LoadNextGameplayLevel(Context); }
 

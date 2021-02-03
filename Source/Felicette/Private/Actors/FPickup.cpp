@@ -7,6 +7,7 @@
 #include "Components/FMovableComponent.h"
 #include "Components/FRotatorComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFPickup::AFPickup()
@@ -83,6 +84,9 @@ void AFPickup::Picked(AFCharacter* Other)
 	                                                                  EAttachmentRule::KeepRelative,
 	                                                                  EAttachmentRule::KeepRelative, true);
 	AttachToComponent(Other->GetMesh(), Rules, Other->GetPickerSocketName());
+
+	if(PickedSound)
+		UGameplayStatics::PlaySound2D(this, PickedSound);
 }
 
 void AFPickup::Dropped()

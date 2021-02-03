@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFMovableComponent* MovableComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
+	class USoundBase* PickedSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FPickedTypeEnum PickedType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)

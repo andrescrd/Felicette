@@ -8,6 +8,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Character/FCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "World/GameModes/FGameMode.h"
 
 // Sets default values
@@ -40,6 +41,9 @@ void AFTeleport::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		AFGameMode* GM = GetWorld()->GetAuthGameMode<AFGameMode>();
 		GM->SetPlayerOnTeleport();
+
+		if(PickedSound)
+			UGameplayStatics::PlaySound2D(this, PickedSound);
 	}
 }
 

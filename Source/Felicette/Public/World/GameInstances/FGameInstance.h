@@ -41,9 +41,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadGameplayFirstLevel(UObject* Context) const;
 	UFUNCTION(BlueprintCallable)
-void LoadLastLevel(UObject* Context) const;
+	void LoadLastLevel(UObject* Context) const;
 	UFUNCTION(BlueprintCallable)
 	void LoadNextGameplayLevel(UObject* Context) const;
 	UFUNCTION(BlueprintCallable)
 	void LoadMainMenu(UObject* Context) const;
+	UFUNCTION(BlueprintCallable)
+	void Restart(UObject* Context) const;
 };

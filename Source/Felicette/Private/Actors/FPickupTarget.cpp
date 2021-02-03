@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Engine/EngineTypes.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "World/GameModes/FGameMode.h"
 
 // Sets default values
@@ -43,7 +44,10 @@ void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		AFGameMode* Gm = GetWorld()->GetAuthGameMode<AFGameMode>();
 		Gm->AddPickedCollected(1);
-		PickedActor->Dropped();		
+		PickedActor->Dropped();
+		
+		if(PickedSound)
+			UGameplayStatics::PlaySound2D(this, PickedSound);
 	}
 }
 

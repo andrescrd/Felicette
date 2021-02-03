@@ -62,7 +62,6 @@ void AFLevelManager::LoadLevel(UObject* Context, const FName LevelNameToLoad)
 	LoadMap(World, LevelNameToLoad);
 }
 
-
 void AFLevelManager::LoadMap(UWorld* World, const FName MapName)
 {
 	if (LoadingWidgetClass)

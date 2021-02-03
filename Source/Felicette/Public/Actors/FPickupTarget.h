@@ -30,6 +30,9 @@ protected:
 	FName MaterialSlotName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)	
 	FName MaterialColorParameterName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
+	class USoundBase* PickedSound;
 	
 	virtual void BeginPlay() override;
 
