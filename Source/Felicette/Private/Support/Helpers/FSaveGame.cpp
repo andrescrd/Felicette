@@ -5,7 +5,6 @@
 
 UFSaveGame::UFSaveGame()
 {
-	SaveSlotName = TEXT("FSlot_Felix");
 	UserIndex = 0;
 	Levels = TArray<FLevelSetup>();
 }

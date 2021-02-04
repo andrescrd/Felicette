@@ -21,8 +21,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<FLevelSetup> Levels;	
-	UPROPERTY(VisibleAnywhere)
-	FString SaveSlotName;
+	// UPROPERTY(VisibleAnywhere)
+	// FString SaveSlotName;
 	UPROPERTY(VisibleAnywhere)
 	uint32 UserIndex;
 };

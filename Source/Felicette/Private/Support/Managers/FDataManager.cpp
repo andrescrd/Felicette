@@ -10,12 +10,12 @@
 void AFDataManager::SaveLevels(const TArray<FLevelSetup> LevelsToSave)
 {
 	GetSaveGameInstance()->Levels = LevelsToSave;
-	UGameplayStatics::SaveGameToSlot(GetSaveGameInstance(), GetSaveGameInstance()->SaveSlotName, GetSaveGameInstance()->UserIndex);
+	UGameplayStatics::SaveGameToSlot(GetSaveGameInstance(), "FSlotFelix", GetSaveGameInstance()->UserIndex);
 }
 
 TArray<FLevelSetup> AFDataManager::GetLevels()
 {
-	if (UFSaveGame *LoadedGame = Cast<UFSaveGame>(UGameplayStatics::LoadGameFromSlot(GetSaveGameInstance()->SaveSlotName, GetSaveGameInstance()->UserIndex)))
+	if (UFSaveGame *LoadedGame = Cast<UFSaveGame>(UGameplayStatics::LoadGameFromSlot("FSlotFelix", GetSaveGameInstance()->UserIndex)))
 	{
 		GEngine->AddOnScreenDebugMessage(0, 0.f, FColor::Red, FString::Printf(TEXT("Game Loaded")));
 		return LoadedGame->Levels;
