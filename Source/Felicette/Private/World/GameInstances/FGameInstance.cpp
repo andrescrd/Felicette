@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "World/GameInstances/FGameInstance.h"
-
-
 #include "Kismet/GameplayStatics.h"
 #include "Support/Managers/FLevelManager.h"
 #include "Support/Managers/FDataManager.h"
@@ -19,8 +17,11 @@ void UFGameInstance::Init()
 		LevelManagerInstance->FOnMapLoaded.AddDynamic(this, &UFGameInstance::HandleMapLoaded);
 
 		if (DataManagerInstance->GetLevels().Num() > 0)
-			LevelManagerInstance->SetGameplayLevels(
-				LevelManagerInstance->GetGameplayLevels().Num() > GetDataManager()->GetLevels().Num() ? LevelManagerInstance->GetGameplayLevels() : GetDataManager()->GetLevels());
+		{
+			const TArray<FLevelSetup> Levels = LevelManagerInstance->GetGameplayLevels().Num() > GetDataManager()->GetLevels().Num() ?
+				LevelManagerInstance->GetGameplayLevels() : GetDataManager()->GetLevels();
+			LevelManagerInstance->SetGameplayLevels(Levels);
+		}			
 	}
 }
 

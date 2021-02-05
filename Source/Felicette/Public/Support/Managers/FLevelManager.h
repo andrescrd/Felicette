@@ -25,13 +25,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	FLevelSetup Menu;
 	UPROPERTY(EditDefaultsOnly)
-	FLevelSetup End;
-	
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> LoadingWidgetClass;
+	FLevelSetup End;	
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FLevelSetup> GameplayLevels;	
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> LoadingWidgetClass;
 	
 	UFUNCTION()
 	void PreparingLevel(UWorld* World, FName Map);
@@ -45,10 +44,8 @@ public:
 	TArray<FLevelSetup> GetGameplayLevels() const;
 	UFUNCTION(BlueprintCallable)
 	FLevelSetup GetNextGameplayLevel();
-
 	UFUNCTION(BlueprintCallable)
 	void LoadNextGameplayLevel(class UWorld* World);
-
 	UFUNCTION(BlueprintCallable)
 	void LoadMenuLevel(class UWorld* Context);
 	UFUNCTION(BlueprintCallable)

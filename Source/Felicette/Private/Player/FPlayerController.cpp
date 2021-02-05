@@ -7,7 +7,6 @@
 #include "Engine/World.h"
 #include "AIController.h"
 #include "Kismet/GameplayStatics.h"
-#include "World/GameInstances/FGameInstance.h"
 
 AFPlayerController::AFPlayerController()
 {
@@ -19,10 +18,6 @@ AFPlayerController::AFPlayerController()
 	bEnableTouchEvents = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
-
-void AFPlayerController::PlayerTick(float DeltaTime) { Super::PlayerTick(DeltaTime); }
-
-void AFPlayerController::BeginPlay() { Super::BeginPlay(); }
 
 void AFPlayerController::SetupInputComponent()
 {

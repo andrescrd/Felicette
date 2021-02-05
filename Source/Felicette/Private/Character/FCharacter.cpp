@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Character/FCharacter.h"
-
 #include "AIController.h"
 #include "Actors/FPickup.h"
 #include "Components/CapsuleComponent.h"

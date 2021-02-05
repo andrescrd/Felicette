@@ -20,8 +20,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float DistanceToMove;
 
-	virtual void PlayerTick(float DeltaTime) override;
-	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
 	void SetNewMoveDestination(const FVector DestLocation);

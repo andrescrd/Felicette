@@ -1,9 +1,8 @@
-#include "Support/Managers/FLevelManager.h"
 
+#include "Support/Managers/FLevelManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
-#include "Engine/Engine.h"
 #include "Engine/LevelStreaming.h"
 #include "Support/Structs/FLevelSetup.h"
 
@@ -84,7 +83,7 @@ void AFLevelManager::LoadGameplayLevel(UWorld* World, const FName MapName)
 
 		FTimerHandle UniqueHandle;
 		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::PreparingLevel, World, MapName);
-		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 3, false);
+		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 2, false);
 	}
 }
 
@@ -103,7 +102,7 @@ void AFLevelManager::PreparingLevel(UWorld* World, FName Map)
 	LastLevelLoaded = Map;
 
 	FTimerHandle UniqueHandle;
-	World->GetTimerManager().SetTimer(UniqueHandle, this, &AFLevelManager::OnMapLoaded, 3, false);
+	World->GetTimerManager().SetTimer(UniqueHandle, this, &AFLevelManager::OnMapLoaded, 1, false);
 }
 
 void AFLevelManager::OnMapLoaded()
