@@ -20,18 +20,9 @@ AFPlayerController::AFPlayerController()
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
-void AFPlayerController::PlayerTick(float DeltaTime)
-{
-	Super::PlayerTick(DeltaTime);
-}
+void AFPlayerController::PlayerTick(float DeltaTime) { Super::PlayerTick(DeltaTime); }
 
-void AFPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (AActor* CurrentActor = UGameplayStatics::GetActorOfClass(GetWorld(), AFCharacter::StaticClass()))
-		MyCharacter = Cast<AFCharacter>(CurrentActor);
-}
+void AFPlayerController::BeginPlay() { Super::BeginPlay(); }
 
 void AFPlayerController::SetupInputComponent()
 {
@@ -39,11 +30,7 @@ void AFPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", EInputEvent::IE_Pressed, this, &AFPlayerController::OnDestination);
 }
 
-void AFPlayerController::SetNewMoveDestination(const FVector DestLocation) const
-{
-	if (MyCharacter)
-		MyCharacter->SetNewMoveDestination(DestLocation, true);
-}
+void AFPlayerController::SetNewMoveDestination(const FVector DestLocation) { GetCurrentCahracter()->SetNewMoveDestination(DestLocation, true); }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void AFPlayerController::OnDestination()
@@ -56,11 +43,11 @@ void AFPlayerController::OnDestination()
 	{
 		AFBlock* Block = Cast<AFBlock>(HitResult.GetActor());
 
-		if(!Block->IsValid() || (Block->HasItemOverlapped() && MyCharacter->HasItemPicked()))
+		if(!Block->IsValid() || (Block->HasItemOverlapped() && GetCurrentCahracter()->HasItemPicked()))
 			return;;
 
 		FVector BlockLocation = Block->GetActorLocation();
-		const FVector CharacterLocation = MyCharacter->GetActorLocation();
+		const FVector CharacterLocation = GetCurrentCahracter()->GetActorLocation();
 
 		BlockLocation.Z = CharacterLocation.Z;		
 		const float Distance = (BlockLocation - CharacterLocation).Size();
@@ -74,6 +61,17 @@ void AFPlayerController::OnDestination()
 		if(Block->IsActive())
 			SetNewMoveDestination(HitResult.GetActor()->GetActorLocation());
 	}
+}
+
+AFCharacter* AFPlayerController::GetCurrentCahracter()
+{
+	if(!IsValid(MyCharacter))
+	{
+		if (AActor* CurrentActor = UGameplayStatics::GetActorOfClass(GetWorld(), AFCharacter::StaticClass()))
+			MyCharacter = Cast<AFCharacter>(CurrentActor);
+	}
+
+	return MyCharacter;	
 }
 
 void AFPlayerController::ToggleInput(const bool Enable)

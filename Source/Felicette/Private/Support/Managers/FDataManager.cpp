@@ -4,7 +4,6 @@
 #include "Support/Managers/FDataManager.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "Engine/Engine.h"
 #include "Support/Helpers/FSaveGame.h"
 
 void AFDataManager::SaveLevels(const TArray<FLevelSetup> LevelsToSave)
@@ -15,11 +14,8 @@ void AFDataManager::SaveLevels(const TArray<FLevelSetup> LevelsToSave)
 
 TArray<FLevelSetup> AFDataManager::GetLevels()
 {
-	if (UFSaveGame *LoadedGame = Cast<UFSaveGame>(UGameplayStatics::LoadGameFromSlot("FSlotFelix", GetSaveGameInstance()->UserIndex)))
-	{
-		GEngine->AddOnScreenDebugMessage(0, 0.f, FColor::Red, FString::Printf(TEXT("Game Loaded")));
+	if (UFSaveGame* LoadedGame = Cast<UFSaveGame>(UGameplayStatics::LoadGameFromSlot("FSlotFelix", GetSaveGameInstance()->UserIndex)))
 		return LoadedGame->Levels;
-	}
 
 	TArray<FLevelSetup> Empty;
 	return Empty;
@@ -27,9 +23,10 @@ TArray<FLevelSetup> AFDataManager::GetLevels()
 
 void AFDataManager::ClearData()
 {
-	GEngine->AddOnScreenDebugMessage(0, 0.f, FColor::Red, FString::Printf(TEXT("Clear Data")));
+	UGameplayStatics::DeleteGameInSlot("FSlotFelix", GetSaveGameInstance()->UserIndex);
 }
-class UFSaveGame *AFDataManager::GetSaveGameInstance()
+
+class UFSaveGame* AFDataManager::GetSaveGameInstance()
 {
 	return IsValid(SaveGameInstance) ? SaveGameInstance : SaveGameInstance = Cast<UFSaveGame>(UGameplayStatics::CreateSaveGameObject(UFSaveGame::StaticClass()));
 }

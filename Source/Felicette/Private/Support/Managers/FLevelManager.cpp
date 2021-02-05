@@ -1,28 +1,25 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Support/Managers/FLevelManager.h"
 
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
+#include "Engine/LevelStreaming.h"
 #include "Support/Structs/FLevelSetup.h"
 
 TArray<FLevelSetup> AFLevelManager::GetGameplayLevels() const { return GameplayLevels; }
 
 void AFLevelManager::SetGameplayLevels(const TArray<FLevelSetup> NewLevels) { GameplayLevels = NewLevels; }
 
-FLevelSetup AFLevelManager::GetNextGameplayLevel(UObject* Context)
+FLevelSetup AFLevelManager::GetNextGameplayLevel()
 {
-	const FName CurrentLevelName = CleanLevelString(Context);
 	FLevelSetup Level;
 
 	for (int32 Index = 0; Index < GameplayLevels.Num(); Index++)
 	{
-		if (GameplayLevels[Index].LevelName.IsEqual(CurrentLevelName))
+		if (GameplayLevels[Index].LevelName.IsEqual(LastLevelLoaded))
 		{
-			Level = (Index + 1 == GameplayLevels.Num()) ? Menu : GameplayLevels[Index + 1];
+			Level = (Index + 1 == GameplayLevels.Num()) ? End : GameplayLevels[Index + 1];
 			break;
 		}
 	}
@@ -30,60 +27,89 @@ FLevelSetup AFLevelManager::GetNextGameplayLevel(UObject* Context)
 	return Level;
 }
 
-void AFLevelManager::LoadNextGameplayLevel(UObject* Context)
+void AFLevelManager::LoadNextGameplayLevel(UWorld* World)
 {
-	const FLevelSetup NextGameplayLevel = GetNextGameplayLevel(Context);
-	UWorld* World = GEngine->GetWorldFromContextObjectChecked(Context);
+	const FLevelSetup NextGameplayLevel = GetNextGameplayLevel();
 
 	if (NextGameplayLevel.LevelName == Menu.LevelName)
 	{
-		LoadMenuLevel(Context);
+		LoadMenuLevel(World);
+	}
+	else if (NextGameplayLevel.LevelName == End.LevelName)
+	{
+		LoadEndLevel(World);
 	}
 	else
 	{
-		for (int32 Index = 0; Index < GameplayLevels.Num(); Index++)
+		const int32 Index = GameplayLevels.FindLastByPredicate([NextGameplayLevel](const FLevelSetup LevelSetup)
 		{
-			if (NextGameplayLevel.LevelName.IsEqual(GameplayLevels[Index].LevelName))
-			{
-				GameplayLevels[Index].State = FLevelStateEnum::Unlocked;
-				LoadMap(World, NextGameplayLevel.LevelName);
-				break;
-			}
+			return LevelSetup.LevelName == NextGameplayLevel.LevelName;
+		});
+
+		if (Index != INDEX_NONE)
+		{
+			GameplayLevels[Index].State = FLevelStateEnum::Unlocked;
+			LoadGameplayLevel(World, NextGameplayLevel.LevelName);
 		}
 	}
 }
 
-void AFLevelManager::LoadMenuLevel(UObject* Context) { LoadLevel(Context, Menu.LevelName); }
-
-void AFLevelManager::LoadLevel(UObject* Context, const FName LevelNameToLoad)
+void AFLevelManager::LoadMenuLevel(UWorld* Context)
 {
-	UWorld* World = GEngine->GetWorldFromContextObjectChecked(Context);
-	UE_LOG(LogTemp, Warning, TEXT("Level to load %s"), *LevelNameToLoad.ToString());
-	LoadMap(World, LevelNameToLoad);
+	LastLevelLoaded = FLevelSetup().LevelName;
+	UGameplayStatics::OpenLevel(Context, Menu.LevelName);
 }
 
-void AFLevelManager::LoadMap(UWorld* World, const FName MapName)
+void AFLevelManager::LoadEndLevel(UWorld* Context)
+{
+	LastLevelLoaded = FLevelSetup().LevelName;
+	UGameplayStatics::OpenLevel(Context, End.LevelName);
+}
+
+void AFLevelManager::LoadGameplayLevel(UWorld* World, const FName MapName)
 {
 	if (LoadingWidgetClass)
 	{
-		auto CurrentWidget = CreateWidget<UUserWidget>(World, LoadingWidgetClass);
+		if (!CurrentWidget)
+			CurrentWidget = CreateWidget<UUserWidget>(World, LoadingWidgetClass);
 
-		if (CurrentWidget != nullptr)
-			CurrentWidget->AddToViewport();
+		CurrentWidget->AddToViewport();
+
+		if (LastLevelLoaded.GetStringLength() > 0 && LastLevelLoaded != FLevelSetup().LevelName)
+		{
+			ULevelStreaming* LevelStreaming = UGameplayStatics::GetStreamingLevel(World, LastLevelLoaded);
+			LevelStreaming->SetShouldBeVisible(false);
+			LevelStreaming->SetIsRequestingUnloadAndRemoval(true);
+		}
 
 		FTimerHandle UniqueHandle;
-		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::OnMapLoaded, World, MapName);
-		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, LoaderTime, false);
+		const FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &AFLevelManager::PreparingLevel, World, MapName);
+		World->GetTimerManager().SetTimer(UniqueHandle, RespawnDelegate, 3, false);
 	}
 }
 
-// ReSharper disable once CppMemberFunctionMayBeStatic
-void AFLevelManager::OnMapLoaded(UWorld* World, const FName MapName) { World->ServerTravel(MapName.ToString()); }
-
-FName AFLevelManager::CleanLevelString(UObject* Context)
+void AFLevelManager::Restart(UWorld* Context)
 {
-	UWorld* World = GEngine->GetWorldFromContextObjectChecked(Context);
-	const FString Prefix = World->StreamingLevelsPrefix;
-	const FString LevelName = World->GetMapName();
-	return FName(*LevelName.RightChop(Prefix.Len()));
+	LastLevelLoaded = FLevelSetup().LevelName;
+	const FString LevelName = UGameplayStatics::GetCurrentLevelName(Context);
+	UGameplayStatics::OpenLevel(Context, *LevelName);
+}
+
+void AFLevelManager::PreparingLevel(UWorld* World, FName Map)
+{
+	const FLatentActionInfo Info;
+	UGameplayStatics::LoadStreamLevel(World, Map, true, true, Info);
+		
+	LastLevelLoaded = Map;
+
+	FTimerHandle UniqueHandle;
+	World->GetTimerManager().SetTimer(UniqueHandle, this, &AFLevelManager::OnMapLoaded, 3, false);
+}
+
+void AFLevelManager::OnMapLoaded()
+{
+	FOnMapLoaded.Broadcast();
+
+	if (CurrentWidget)
+		CurrentWidget->RemoveFromViewport();
 }

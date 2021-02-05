@@ -7,6 +7,8 @@
 #include "Actors/FTeleport.h"
 #include "GameFramework/GameModeBase.h"
 #include "Support/Enums/FGameStatusEnum.h"
+#include "World/GameInstances/FGameInstance.h"
+
 
 #include "FGameMode.generated.h"
 
@@ -23,6 +25,7 @@ protected:
 	int PickedCounter;
 	int PickedCollected;
 	AFTeleport* Teleport;
+	UFGameInstance* GameInstanceRef;
 
 	virtual void BeginPlay() override;
 
@@ -33,10 +36,15 @@ protected:
 	void Preparing();
 	void Playing() const;
 	void Complete() const;
-	void Finished() const;
+	void Finished();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnGameStatusChange(FGameStatusEnum CurrentGameStatus);
+
+	UFUNCTION()
+	void HandleOnGameplayMapLoaded();
+	UFUNCTION()
+	void HandleOnFinish();
 
 public:
 	void AddPickedCollected(const int Value);

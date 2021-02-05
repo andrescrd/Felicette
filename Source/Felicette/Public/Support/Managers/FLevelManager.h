@@ -7,41 +7,56 @@
 #include "Support/Structs/FLevelSetup.h"
 #include "FLevelManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMapLoaded);
+
 UCLASS(Blueprintable)
 class FELICETTE_API AFLevelManager : public AInfo
 {
 	GENERATED_BODY()
-
-private:
-	FName CleanLevelString(class UObject* Context);
-
+	
 protected:
+	UPROPERTY(VisibleInstanceOnly)
 	FLevelSetup CurrentLevel;
+	UPROPERTY(VisibleInstanceOnly)
+	class UUserWidget* CurrentWidget;
+	UPROPERTY(VisibleInstanceOnly)
+	FName LastLevelLoaded;	
 
 	UPROPERTY(EditDefaultsOnly)
 	FLevelSetup Menu;
 	UPROPERTY(EditDefaultsOnly)
-	FLevelSetup Loading;	
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget>  LoadingWidgetClass;
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FLevelSetup> GameplayLevels;
-	UPROPERTY(EditDefaultsOnly)
-	float LoaderTime;
+	FLevelSetup End;
+	
 
-	void LoadMap(class UWorld* World, FName MapName);
-	void OnMapLoaded(class UWorld* World, FName MapName);
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> LoadingWidgetClass;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FLevelSetup> GameplayLevels;	
+	
+	UFUNCTION()
+	void PreparingLevel(UWorld* World, FName Map);
+	UFUNCTION(BlueprintCallable)
+	void OnMapLoaded();
+	
 public:
 	void SetGameplayLevels(TArray<FLevelSetup> NewLevels);
 
 	UFUNCTION(BlueprintCallable)
-	void LoadLevel(class UObject* Context, FName LevelNameToLoad);
-	UFUNCTION(BlueprintCallable)
 	TArray<FLevelSetup> GetGameplayLevels() const;
 	UFUNCTION(BlueprintCallable)
-	FLevelSetup GetNextGameplayLevel(class UObject* Context);
+	FLevelSetup GetNextGameplayLevel();
+
 	UFUNCTION(BlueprintCallable)
-	void LoadNextGameplayLevel(class UObject* Context);
+	void LoadNextGameplayLevel(class UWorld* World);
+
 	UFUNCTION(BlueprintCallable)
-	void LoadMenuLevel(class UObject* Context);
+	void LoadMenuLevel(class UWorld* Context);
+	UFUNCTION(BlueprintCallable)
+    void LoadEndLevel(class UWorld* Context);
+	UFUNCTION(BlueprintCallable)
+	void LoadGameplayLevel(class UWorld* World, FName MapName);
+	UFUNCTION(BlueprintCallable)
+	void Restart(class UWorld* Context);
+
+	FOnMapLoaded FOnMapLoaded;
 };

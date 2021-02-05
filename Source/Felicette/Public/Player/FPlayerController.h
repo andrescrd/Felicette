@@ -24,8 +24,10 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
-	void SetNewMoveDestination(const FVector DestLocation) const;
+	void SetNewMoveDestination(const FVector DestLocation);
 	void OnDestination();
+
+	class AFCharacter* GetCurrentCahracter();
 
 public:
 	void ToggleInput(bool Enable);

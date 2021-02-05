@@ -2,12 +2,16 @@
 
 #include "World/GameModes/FGameMode.h"
 
+
+#include "EngineUtils.h"
 #include "Actors/FPickup.h"
 #include "Actors/FTeleport.h"
+#include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/FPlayerController.h"
 #include "World/GameInstances/FGameInstance.h"
 #include "World/GameStates/FGameState.h"
+#include "TimerManager.h"
 
 AFGameMode::AFGameMode()
 {
@@ -19,7 +23,12 @@ AFGameMode::AFGameMode()
 void AFGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	SetGameStatus(FGameStatusEnum::PREPARING);
+
+	if (!IsValid(GameInstanceRef))
+		GameInstanceRef = GetGameInstance<UFGameInstance>();
+
+	GameInstanceRef->OnGameplayMapLoaded.AddDynamic(this, &AFGameMode::HandleOnGameplayMapLoaded);
+	GameInstanceRef->LoadLastLevel(GetWorld());
 }
 
 FGameStatusEnum AFGameMode::GetGameStatus() const { return GameStatus; }
@@ -27,6 +36,10 @@ FGameStatusEnum AFGameMode::GetGameStatus() const { return GameStatus; }
 int AFGameMode::GetPickedCounter() const { return PickedCounter; }
 
 int AFGameMode::GetPickedCollected() const { return PickedCollected; }
+
+void AFGameMode::HandleOnGameplayMapLoaded() { SetGameStatus(FGameStatusEnum::PREPARING); }
+
+void AFGameMode::HandleOnFinish() { GetGameInstance<UFGameInstance>()->LoadNextGameplayLevel(GetWorld()); }//used as delay while change map 
 
 void AFGameMode::AddPickedCollected(const int Value)
 {
@@ -50,17 +63,21 @@ void AFGameMode::SetGameStatus(const FGameStatusEnum CurrentGameStatus)
 
 void AFGameMode::Preparing()
 {
-	TogglePlayerInput(false);
-
+	PickedCounter = 0;
+	PickedCollected = 0;
+	Teleport = nullptr;
+	
 	TArray<AActor*> PickupActors;
-	UGameplayStatics::GetAllActorsOfClass(this, AFPickup::StaticClass(), PickupActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFPickup::StaticClass(), PickupActors);
 	PickedCounter = PickupActors.Num();
+	
+	TArray<AActor*> TeleportActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFTeleport::StaticClass(), TeleportActors);
 
-	AActor* Actor = UGameplayStatics::GetActorOfClass(this, AFTeleport::StaticClass());
+	if(TeleportActors.Num() > 0)
+		Teleport = Cast<AFTeleport>(TeleportActors[0]);
 
-	if (Actor)
-		Teleport = Cast<AFTeleport>(Actor);
-
+	TogglePlayerInput(false);
 	SetGameStatus(FGameStatusEnum::PLAYING);
 }
 
@@ -68,10 +85,12 @@ void AFGameMode::Playing() const { TogglePlayerInput(true); }
 
 void AFGameMode::Complete() const { Teleport->SetIsActivated(true); }
 
-void AFGameMode::Finished() const
+void AFGameMode::Finished() 
 {
-	TogglePlayerInput(false);	
-	Cast<UFGameInstance>(GetGameInstance())->LoadNextGameplayLevel(GetWorld());
+	TogglePlayerInput(false);
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AFGameMode::HandleOnFinish, 2, false);	
 }
 
 void AFGameMode::TogglePlayerInput(const bool Enable) const

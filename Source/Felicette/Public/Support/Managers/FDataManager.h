@@ -15,7 +15,6 @@ class FELICETTE_API AFDataManager : public AInfo
 protected:
 	UPROPERTY(VisibleAnywhere)
 	class UFSaveGame* SaveGameInstance;
-	UFUNCTION(BlueprintCallable)
 	class UFSaveGame* GetSaveGameInstance();
 
 public:

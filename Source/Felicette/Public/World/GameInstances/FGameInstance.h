@@ -8,6 +8,8 @@
 
 #include "FGameInstance.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameplayMapLoaded);
 /**
  * 
  */
@@ -32,14 +34,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class AFLevelManager> LevelManagerClass;
 
+	UFUNCTION()
+	void HandleMapLoaded();
+
 public:
 	UFUNCTION(BlueprintCallable)
 	class AFLevelManager* GetLevelManager() const;
 	UFUNCTION(BlueprintCallable)
 	class AFDataManager* GetDataManager() const;
 
-	UFUNCTION(BlueprintCallable)
-	void LoadGameplayFirstLevel(UObject* Context) const;
 	UFUNCTION(BlueprintCallable)
 	void LoadLastLevel(UObject* Context) const;
 	UFUNCTION(BlueprintCallable)
@@ -48,4 +51,8 @@ public:
 	void LoadMainMenu(UObject* Context) const;
 	UFUNCTION(BlueprintCallable)
 	void Restart(UObject* Context) const;
+	UFUNCTION(BlueprintCallable)
+    void CleanData(UObject* Context) const;
+	
+	FOnGameplayMapLoaded OnGameplayMapLoaded;
 };
