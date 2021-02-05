@@ -13,12 +13,6 @@ AFFloorGenerator::AFFloorGenerator()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
-void AFFloorGenerator::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void AFFloorGenerator::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);	

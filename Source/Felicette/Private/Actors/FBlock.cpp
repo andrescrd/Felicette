@@ -2,9 +2,6 @@
 
 
 #include "Felicette/Public/Actors/FBlock.h"
-
-
-
 #include "Actors/FPickup.h"
 #include "Components/BoxComponent.h"
 #include "Components/TimelineComponent.h"
@@ -58,10 +55,7 @@ void AFBlock::SetupTimeline()
 	EndLocation.Z += OffsetZ;
 }
 
-void AFBlock::OnTimelineHandler(const float Output)
-{
-	SetActorLocation(FMath::Lerp(StartLocation, EndLocation, Output));
-}
+void AFBlock::OnTimelineHandler(const float Output) { SetActorLocation(FMath::Lerp(StartLocation, EndLocation, Output)); }
 
 void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 {
@@ -83,9 +77,7 @@ void AFBlock::NotifyActorEndOverlap(AActor* OtherActor)
 	}
 }
 
-void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-}
+void AFBlock::NotifyActorBeginOverlap(AActor* OtherActor) { }
 
 bool AFBlock::IsValid()
 {

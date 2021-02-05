@@ -2,8 +2,6 @@
 
 
 #include "Actors/FTeleport.h"
-
-
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Character/FCharacter.h"
@@ -25,12 +23,6 @@ AFTeleport::AFTeleport()
 	MeshComponent->SetupAttachment(RootComponent);
 
 	PrimaryActorTick.bCanEverTick = false;
-}
-
-// Called when the game starts or when spawned
-void AFTeleport::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void AFTeleport::NotifyActorBeginOverlap(AActor* OtherActor)

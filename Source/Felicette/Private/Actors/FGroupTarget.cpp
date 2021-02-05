@@ -2,7 +2,6 @@
 
 
 #include "Actors/FGroupTarget.h"
-
 #include "Actors/FPickup.h"
 #include "Actors/FPickupTarget.h"
 #include "Components/ChildActorComponent.h"
@@ -24,11 +23,6 @@ AFGroupTarget::AFGroupTarget()
 	TargetChild->SetupAttachment(RootComponent);
 
 	PrimaryActorTick.bCanEverTick = false;
-}
-
-void AFGroupTarget::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void AFGroupTarget::OnConstruction(const FTransform& Transform)

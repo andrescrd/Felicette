@@ -2,7 +2,6 @@
 
 
 #include "Actors/FPickupTarget.h"
-
 #include "Components/BoxComponent.h"
 #include "Engine/EngineTypes.h"
 #include "NiagaraComponent.h"
@@ -27,11 +26,6 @@ AFPickupTarget::AFPickupTarget()
 	MeshComponent->SetupAttachment(RootComponent);
 
 	PrimaryActorTick.bCanEverTick = false;
-}
-
-void AFPickupTarget::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void AFPickupTarget::NotifyActorBeginOverlap(AActor* OtherActor)

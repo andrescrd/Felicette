@@ -30,21 +30,6 @@ AFPickup::AFPickup()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void AFPickup::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AFPickup::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	// if (AFCharacter* Character = Cast<AFCharacter>(OtherActor))
-	// {
-	// 	MovableComponent->Deactivate();
-	// 	Picked(Character);
-	// }
-}
-
 void AFPickup::SetPickedType(const FPickedTypeEnum PickedTypeEnum) { PickedType = PickedTypeEnum; }
 
 FPickedTypeEnum AFPickup::GetPickedType() const { return PickedType; }
