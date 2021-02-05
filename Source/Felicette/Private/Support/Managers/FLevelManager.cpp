@@ -1,4 +1,3 @@
-
 #include "Support/Managers/FLevelManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
@@ -98,7 +97,7 @@ void AFLevelManager::PreparingLevel(UWorld* World, FName Map)
 {
 	const FLatentActionInfo Info;
 	UGameplayStatics::LoadStreamLevel(World, Map, true, true, Info);
-		
+
 	LastLevelLoaded = Map;
 
 	FTimerHandle UniqueHandle;
