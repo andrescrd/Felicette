@@ -28,8 +28,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	class USoundBase* PickedSound;
 
-	virtual void BeginPlay() override;
-
 public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void SetIsActivated(bool IsActivated);

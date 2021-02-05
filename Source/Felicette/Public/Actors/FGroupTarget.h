@@ -38,8 +38,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category=Setup)	
 	class UDataTable* DataTable;
 
-	virtual void BeginPlay() override;
-
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 };

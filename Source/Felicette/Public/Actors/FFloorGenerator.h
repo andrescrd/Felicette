@@ -29,8 +29,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=FloorGenerator)
 	TSubclassOf<class AFBlock> BlockClass;
 
-	virtual void BeginPlay() override;
-
 public:	
 	virtual void OnConstruction(const FTransform& Transform) override;
 

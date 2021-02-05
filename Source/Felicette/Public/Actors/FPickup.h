@@ -44,11 +44,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Setup)
 	FName MaterialColorParameterName;
 
-	virtual void BeginPlay() override;
-
 public:
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-
 	void SetPickedType(FPickedTypeEnum PickedTypeEnum);
 	void SetColor(const FLinearColor Color) const;
 	void Picked(class AFCharacter* Other);
