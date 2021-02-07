@@ -32,7 +32,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UFRotatorComponent* RotatorComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UFMovableComponent* MovableComponent;
+	class UFMovableConstatComponent* MovableComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Setup)
 	class USoundBase* PickedSound;

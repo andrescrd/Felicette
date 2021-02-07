@@ -53,7 +53,7 @@ void UFMovableComponent::OnTimelineHandler(float Value)
 	AActor* CurrentActor = GetOwner();
 
 	if (CurrentActor)
-		CurrentActor->SetActorLocation(FMath::Lerp(StartLocation, EndLocation, Value), true, nullptr, ETeleportType::ResetPhysics);
+		CurrentActor->SetActorLocation(FMath::Lerp(StartLocation, EndLocation, Value), true);
 }
 
 void UFMovableComponent::OnTimelineFinish() { PlayTimeline(); }

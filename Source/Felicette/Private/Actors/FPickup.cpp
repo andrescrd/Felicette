@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Character/FCharacter.h"
 #include "Components/FMovableComponent.h"
+#include "Components/FMovableConstantComponent.h"
 #include "Components/FRotatorComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -25,7 +26,7 @@ AFPickup::AFPickup()
 	MeshComponent->SetupAttachment(RootComponent);
 
 	RotatorComponent = CreateDefaultSubobject<UFRotatorComponent>(TEXT("RotatorComponent"));
-	MovableComponent = CreateDefaultSubobject<UFMovableComponent>(TEXT("MovableComponent"));
+	MovableComponent = CreateDefaultSubobject<UFMovableConstatComponent>(TEXT("MovableConstatComponent"));
 
 	PrimaryActorTick.bCanEverTick = true;
 }
